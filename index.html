@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La explicación definitiva del ordenador cuántico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a1626; --bg2:#0c1a2c;
+    --card:#11233b;
+    --ink:#e9f0f7; --mut:#92a8c2; --faint:#5d7593;
+    --water:#4cc9e8;   /* analogía */
+    --quant:#a78bfa;   /* estado cuántico */
+    --steel:#8fa6bf;   /* máquina real */
+    --amber:#f6a93b;   /* matemática */
+    --code:#7ee787;    /* código */
+    --cancel:#e8607d;
+    --line:rgba(118,160,200,.16);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(1100px 700px at 82% -5%,rgba(76,201,232,.10),transparent 60%),
+      radial-gradient(900px 600px at 0% 102%,rgba(246,169,59,.06),transparent 55%),
+      linear-gradient(180deg,var(--bg),var(--bg2));
+    background-attachment:fixed;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      linear-gradient(var(--line) 1px,transparent 1px),
+      linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:36px 36px;
+    mask:radial-gradient(1100px 1000px at 50% 18%,#000 50%,transparent 100%);
+    opacity:.45;
+  }
+  .wrap{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:54px 22px 80px}
+
+  /* HERO */
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--water);margin:0 0 14px;display:flex;align-items:center;gap:12px}
+  .eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,#2a6f86,transparent)}
+  h1{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:-.015em;
+    font-size:clamp(32px,6vw,56px);line-height:1.02;margin:0 0 18px}
+  h1 em{font-style:normal;color:var(--amber)}
+  .lede{font-size:clamp(16px,2.4vw,18px);color:var(--mut);margin:0 0 14px}
+  .lede b{color:var(--ink);font-weight:600}
+
+  .setup{border-left:3px solid var(--water);background:rgba(76,201,232,.05);
+    padding:16px 20px;border-radius:0 12px 12px 0;margin:30px 0}
+  .setup p{margin:0 0 10px;color:var(--mut);font-size:15px}
+  .setup p:last-child{margin:0}
+  .setup b{color:var(--ink);font-weight:600}
+  .setup .pop{color:var(--amber);font-weight:600}
+
+  /* LEGEND */
+  .legend{margin:30px 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px 20px}
+  .legend h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;
+    text-transform:uppercase;color:var(--faint);margin:0 0 14px;font-weight:500}
+  .legend .row{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px}
+  .legend .row:last-child{margin-bottom:0}
+  .chip{flex:none;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
+    text-transform:uppercase;padding:4px 10px;border-radius:7px;font-weight:600;
+    border:1px solid currentColor;min-width:128px;text-align:center}
+  .c-water{color:var(--water)} .c-quant{color:var(--quant)}
+  .c-steel{color:var(--steel)} .c-amber{color:var(--amber)} .c-code{color:var(--code)}
+  .legend .row span:not(.chip){color:var(--mut);font-size:13.5px;padding-top:2px}
+
+  /* STEP */
+  .step{margin-top:30px}
+  .step-head{display:flex;align-items:baseline;gap:14px;margin:0 2px 14px}
+  .step-num{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:14px;
+    color:var(--bg);background:var(--water);border-radius:7px;padding:3px 9px;flex:none}
+  .step-title{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:clamp(20px,3.4vw,26px);letter-spacing:-.01em;margin:0}
+  .step-sub{color:var(--faint);font-size:13.5px;margin:0 0 0 auto;font-family:"IBM Plex Mono",monospace}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .diagram{padding:18px 18px 14px;background:linear-gradient(180deg,rgba(76,201,232,.035),transparent);text-align:center}
+  .diagram svg{display:block;width:100%;max-width:420px;height:auto;margin:0 auto}
+  .diagram figcaption{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.08em;
+    color:var(--faint);margin-top:8px;text-transform:uppercase}
+  .layer{padding:15px 18px 16px;border-top:1px solid var(--line);border-left:3px solid transparent}
+  .layer:first-child{border-top:none}
+  .L-water{border-left-color:var(--water);background:linear-gradient(90deg,rgba(76,201,232,.05),transparent 40%)}
+  .L-quant{border-left-color:var(--quant);background:linear-gradient(90deg,rgba(167,139,250,.05),transparent 40%)}
+  .L-steel{border-left-color:var(--steel);background:linear-gradient(90deg,rgba(143,166,191,.05),transparent 40%)}
+  .L-amber{border-left-color:var(--amber);background:linear-gradient(90deg,rgba(246,169,59,.06),transparent 40%)}
+  .L-code{border-left-color:var(--code);background:rgba(0,0,0,.24)}
+  .L-code .lbl{color:var(--code)}
+  .L-code pre{margin:0;font-family:"IBM Plex Mono",monospace;font-size:12px;line-height:1.65;
+    color:#cfe9d6;white-space:pre-wrap;word-break:break-word;overflow-x:auto}
+  .L-code pre .cm{color:#6f8aa0}
+  .L-code pre .kw{color:var(--code);font-weight:600}
+  .lbl{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.16em;
+    text-transform:uppercase;font-weight:600;margin-bottom:5px;display:block}
+  .L-water .lbl{color:var(--water)} .L-quant .lbl{color:var(--quant)}
+  .L-steel .lbl{color:var(--steel)} .L-amber .lbl{color:var(--amber)}
+  .layer p{margin:0;font-size:14.5px;color:#cddcec;line-height:1.55}
+  .layer p b{color:var(--ink);font-weight:600}
+  .formula{font-family:"IBM Plex Mono",monospace;font-size:14px;color:#ffe3b0;line-height:1.7;margin:0 0 7px}
+  .gloss{margin:0;font-size:13px;color:var(--mut);line-height:1.5}
+  .gloss b{color:#e7d3ad;font-weight:600}
+  .ket{font-family:"IBM Plex Mono",monospace;color:var(--water)}
+  .neg{color:var(--cancel);font-weight:600}
+  .pos{color:var(--amber);font-weight:600}
+
+  .wire{height:34px;display:flex;justify-content:center;align-items:center}
+  .wire::before{content:"";width:2px;height:100%;background:linear-gradient(180deg,transparent,#2a6f86,transparent)}
+
+  /* PULL QUOTE */
+  .pullquote{margin:30px 4px 8px;padding:4px 0 4px 22px;border-left:3px solid var(--amber)}
+  .pullquote .eyebrow2{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+  .pullquote p{font-family:"Space Grotesk",sans-serif;font-style:italic;font-weight:500;
+    font-size:clamp(18px,3.2vw,24px);line-height:1.28;color:var(--ink);margin:0}
+  .pullquote p .em{color:var(--amber);font-style:normal;font-weight:600}
+
+  /* DOUBLE-SLIT INTRO NOTE */
+  .realworld{margin:30px 0 8px;border:1px solid rgba(76,201,232,.28);border-radius:14px;
+    background:radial-gradient(600px 220px at 85% 0%,rgba(76,201,232,.08),transparent 70%),var(--card);padding:18px 20px 6px}
+  .realworld .eyebrow3{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--water);margin:0 0 10px;font-weight:600}
+  .realworld p{color:var(--mut);font-size:14.5px;margin:0 0 10px;line-height:1.55}
+  .realworld p b{color:var(--ink);font-weight:600}
+  .realworld p .seg{color:var(--water);font-weight:600}
+  .realworld .later{font-size:12.5px;color:var(--faint);font-style:italic}
+
+  /* WHY SECTION (bottom) */
+  .why{margin-top:46px;border:1px solid rgba(76,201,232,.28);border-radius:16px;
+    background:radial-gradient(700px 240px at 80% 0%,rgba(76,201,232,.08),transparent 70%),var(--card);padding:26px 24px}
+  .why h2{font-family:"Space Grotesk",sans-serif;font-size:22px;margin:0 0 12px;letter-spacing:-.01em}
+  .why p{color:var(--mut);font-size:15px;margin:0 0 14px;line-height:1.6}
+  .why p:last-child{margin:0}
+  .why p b{color:var(--ink);font-weight:600}
+  .why p .pop2{color:var(--water);font-weight:600}
+  .why .kicker{font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.7;color:#bfe7f4;
+    border-left:3px solid var(--water);padding:4px 0 4px 16px;margin:18px 0 0;font-style:normal}
+
+  /* CODA */
+  .coda{margin-top:18px;border:1px dashed rgba(76,201,232,.32);border-radius:14px;
+    padding:18px 20px;background:rgba(76,201,232,.03)}
+  .coda h3{font-family:"Space Grotesk",sans-serif;font-size:17px;margin:0 0 8px;color:var(--ink);letter-spacing:-.01em}
+  .coda p{color:var(--mut);font-size:14px;margin:0;line-height:1.6}
+  .coda p b{color:var(--ink);font-weight:600}
+  .coda p .eng{color:var(--water);font-weight:600}
+
+  /* GLOSSARY */
+  .glossary{margin-top:46px;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:24px 22px}
+  .glossary h2{font-family:"Space Grotesk",sans-serif;font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+  .glossary .intro{color:var(--faint);font-size:13px;margin:0 0 18px;font-family:"IBM Plex Mono",monospace;letter-spacing:.04em}
+  .gitem{display:grid;grid-template-columns:160px 1fr;gap:14px;padding:11px 0;border-top:1px solid var(--line)}
+  .gitem:first-of-type{border-top:none}
+  .gitem dt{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--water)}
+  .gitem dd{margin:0;font-size:14px;color:var(--mut);line-height:1.5}
+  .gitem dd b{color:var(--ink);font-weight:600}
+
+  /* FAQ */
+  .faq{margin-top:30px;border:1px solid var(--line);border-radius:16px;background:var(--card);padding:24px 22px}
+  .faq h2{font-family:"Space Grotesk",sans-serif;font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+  .faq .intro{color:var(--faint);font-size:13px;margin:0 0 18px;font-family:"IBM Plex Mono",monospace;letter-spacing:.04em}
+  .qa{padding:15px 0;border-top:1px solid var(--line)}
+  .qa:first-of-type{border-top:none}
+  .qa .q{font-family:"Space Grotesk",sans-serif;font-weight:600;font-size:16px;color:var(--water);margin:0 0 7px;display:flex;gap:9px}
+  .qa .q span{color:var(--faint);font-family:"IBM Plex Mono",monospace;font-size:13px}
+  .qa .a{margin:0;font-size:14px;color:var(--mut);line-height:1.56}
+  .qa .a b{color:var(--ink);font-weight:600}
+  .qa .a .pop{color:var(--amber);font-weight:600}
+
+  /* CLOSE */
+  .close{margin-top:46px;border:1px solid rgba(246,169,59,.28);border-radius:16px;
+    background:radial-gradient(700px 240px at 80% 0%,rgba(246,169,59,.09),transparent 70%),var(--card);padding:26px 24px}
+  .close h2{font-family:"Space Grotesk",sans-serif;font-size:22px;margin:0 0 12px;letter-spacing:-.01em}
+  .close p{color:var(--mut);font-size:15px;margin:0 0 14px}
+  .close p b{color:var(--ink)} .close p .pop{color:var(--amber);font-weight:600}
+  .verdict{font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.7;color:#ffe3b0;
+    border-left:3px solid var(--amber);padding:4px 0 4px 16px;margin:18px 0 0}
+  .when{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+  .when div{border:1px solid var(--line);border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--mut)}
+  .when .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  .when .yes .k{color:var(--water)} .when .no .k{color:var(--cancel)}
+  .when b{color:var(--ink);font-weight:600}
+
+  .foot{margin-top:34px;text-align:center;color:var(--faint);
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase}
+
+  @media (max-width:560px){
+    .step-sub{display:none}
+    .chip{min-width:104px}
+    .when{grid-template-columns:1fr}
+    .gitem{grid-template-columns:1fr;gap:3px}
+    .wrap{padding:40px 16px 60px}
+  }
+  /* CLICKABLE GLOSSARY TERMS */
+  .gt{cursor:help;border-bottom:1px dotted var(--quant)}
+  .gt:hover{border-bottom-color:var(--water);color:var(--water)}
+  #gt-pop{position:absolute;z-index:9999;max-width:280px;background:#142a45;
+    border:1px solid rgba(118,160,200,.35);border-radius:10px;padding:11px 13px;
+    box-shadow:0 12px 32px rgba(0,0,0,.55);font-family:"Inter",sans-serif;font-size:13px;
+    line-height:1.5;color:var(--mut);display:none}
+  #gt-pop strong{display:block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--water);margin-bottom:6px;font-weight:600}
+  #gt-pop b{color:var(--ink);font-weight:600}
+  /* CREDITS */
+  .credits{margin-top:16px;display:flex;gap:9px;justify-content:center;align-items:center;flex-wrap:wrap;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;color:var(--faint)}
+  .credits .v{color:var(--code);font-weight:600}
+  .credits a{color:var(--water);text-decoration:none;border-bottom:1px solid transparent}
+  .credits a:hover{border-bottom-color:var(--water)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Computación cuántica · de la intuición a la fórmula</p>
+  <h1>La explicación <em>definitiva</em> del ordenador cuántico</h1>
+  <p class="lede">Un mismo recorrido contado en <b>cinco alturas de zoom</b>, todo dentro de un solo mundo: <b>un laberinto inundado</b>. Empieza por el agua; baja a las matemáticas o al código solo si te apetece. Las cinco son el mismo paso, a distinta altura.</p>
+
+  <div class="setup">
+    <p>Imagina un <b>laberinto inundado</b>: corredores llenos de agua, miles de ellos, y <b>solo uno es la salida de verdad</b>; el resto son callejones sin salida.</p>
+    <p>Un ordenador normal es una <b>persona que lo recorre a pie</b>, corredor a corredor. Un millón de caminos, un millón de intentos.</p>
+    <p>Te habrán dicho que el cuántico “los recorre todos a la vez”. <span class="pop">Eso solo no sirve de nada</span>: aunque los recorras todos, sales por una puerta, y al azar es como tirar una moneda. Recorrerlo todo es el principio, no la magia.</p>
+    <p>La magia: en vez de mandar a una persona, <b>tiras una piedra al agua</b>. Una ola entra por todos los corredores a la vez — y una ola tiene algo que una persona no: <b>crestas y valles que pueden cancelarse entre sí</b>. Todo lo que sigue ocurre en este mismo estanque.</p>
+    <p><b>Y algo clave antes de empezar:</b> no hay un laberinto universal. Cada problema que quieras resolver necesita <b>su propio laberinto, construido a medida</b> — lo que en la jerga se llama un <b>circuito</b>. Sus paredes se disponen <span class="pop">para que sea el propio movimiento del agua el que haga aflorar la solución</span>, sin que tú tengas que señalarla. Tú diseñas el laberinto; <b>el cálculo, en el fondo, lo hace la naturaleza</b> — tú solo le das la forma y te asomas a mirar.</p>
+  </div>
+
+  <div class="realworld">
+    <p class="eyebrow3">Esto no es una metáfora</p>
+    <figure class="diagram"><svg viewBox="0 0 340 150" role="img" aria-label="Experimento de la doble rendija: una fuente emite ondas que pasan por dos rendijas y, en la pantalla, forman franjas brillantes (donde se suman) y vacías (donde se cancelan).">
+      <circle cx="16" cy="75" r="3.5" fill="#f6a93b"/>
+      <g fill="none" stroke="#4cc9e8" stroke-width="1.4">
+        <path d="M22 64 A11 11 0 0 1 22 86" opacity=".8"/>
+        <path d="M29 55 A20 20 0 0 1 29 95" opacity=".5"/>
+        <path d="M36 47 A28 28 0 0 1 36 103" opacity=".28"/>
+      </g>
+      <g fill="#8fa6bf"><rect x="106" y="18" width="5" height="44"/><rect x="106" y="70" width="5" height="10"/><rect x="106" y="88" width="5" height="44"/></g>
+      <text x="108" y="12" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#8fa6bf">2 RENDIJAS</text>
+      <g fill="none" stroke="#4cc9e8" stroke-width="1.3">
+        <path d="M119 58 A9 9 0 0 1 119 74" opacity=".55"/><path d="M128 50 A17 17 0 0 1 128 82" opacity=".38"/><path d="M137 43 A24 24 0 0 1 137 89" opacity=".22"/>
+        <path d="M119 76 A9 9 0 0 1 119 92" opacity=".55"/><path d="M128 68 A17 17 0 0 1 128 100" opacity=".38"/><path d="M137 61 A24 24 0 0 1 137 107" opacity=".22"/>
+      </g>
+      <line x1="300" y1="18" x2="300" y2="132" stroke="#8fa6bf" stroke-width="2"/>
+      <text x="300" y="144" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#8fa6bf">PANTALLA</text>
+      <g stroke="#f6a93b" stroke-linecap="round">
+        <line x1="272" y1="75" x2="298" y2="75" stroke-width="6"/>
+        <line x1="280" y1="52" x2="298" y2="52" stroke-width="5" opacity=".85"/>
+        <line x1="280" y1="98" x2="298" y2="98" stroke-width="5" opacity=".85"/>
+        <line x1="286" y1="30" x2="298" y2="30" stroke-width="4" opacity=".55"/>
+        <line x1="286" y1="120" x2="298" y2="120" stroke-width="4" opacity=".55"/>
+      </g>
+      <g fill="none" stroke="#e8607d" stroke-width="1.4"><circle cx="293" cy="63" r="2.4"/><circle cx="293" cy="87" r="2.4"/></g>
+    </svg><figcaption>la doble rendija: <span style="color:#f6a93b">brillante</span> donde las ondas se suman, <span style="color:#e8607d">vacío</span> donde se cancelan</figcaption></figure>
+    <p>Dispara fotones de uno en uno por dos rendijas y, tras muchos, la pantalla muestra <b>franjas</b>: zonas llenas y zonas <b>vacías</b>. Un solo fotón pasa por <span class="seg">las dos rendijas a la vez</span> —como una onda— y se interfiere consigo mismo. El agua del laberinto no es un truco que inventamos: <b>es lo que de verdad hace una partícula</b>.</p>
+    <p class="later">Volvemos a ello al final, para ver por qué eso permite que la naturaleza calcule por nosotros.</p>
+  </div>
+
+  <div class="legend">
+    <h2>Los 5 niveles de cada paso</h2>
+    <div class="row"><span class="chip c-water">Analogía</span><span>El laberinto inundado y sus olas. La intuición, siempre en el mismo mundo.</span></div>
+    <div class="row"><span class="chip c-quant">Estado cuántico</span><span>Qué le pasa de verdad al qubit: superposición, fase, amplitudes.</span></div>
+    <div class="row"><span class="chip c-steel">Máquina real</span><span>Qué hace el hardware: pulsos, microondas, láseres, frío extremo.</span></div>
+    <div class="row"><span class="chip c-amber">Matemática</span><span>La fórmula y, debajo, qué dice en cristiano.</span></div>
+    <div class="row"><span class="chip c-code">Código</span><span>El paso en Qiskit. Las 8 líneas, juntas, forman un programa que corre.</span></div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">01</span><h3 class="step-title">El estado inicial</h3><span class="step-sub">el agua en calma</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 104" role="img" aria-label="Tres líneas de agua perfectamente planas, en calma, etiquetadas como cero.">
+        <line x1="62" y1="20" x2="62" y2="92" stroke="#5d7593" stroke-width="1" stroke-dasharray="3 4"/>
+        <text x="62" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593">ENTRADA</text>
+        <g stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
+          <line x1="70" y1="34" x2="322" y2="34"/><line x1="70" y1="58" x2="322" y2="58"/><line x1="70" y1="82" x2="322" y2="82"/>
+        </g>
+        <g fill="#92a8c2" font-family="IBM Plex Mono,monospace" font-size="13">
+          <text x="30" y="39">|0⟩</text><text x="30" y="63">|0⟩</text><text x="30" y="87">|0⟩</text>
+        </g>
+      </svg><figcaption>agua en calma · todo en |0⟩</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>El laberinto recién inundado, con el agua <b>perfectamente quieta</b> en la entrada. Las paredes —que <b>son el problema</b>— ya están puestas. Todo listo para tirar la piedra.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Todos los qubits se ponen en <span class="ket">|0⟩</span>: un estado nítido y definido, <b>sin superposición todavía</b>. El lienzo en blanco.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Se resetea el sistema a su mínima energía. En un chip <b>superconductor</b> se enfría a ~15 milikelvin (más frío que el espacio) y se deja relajar; con <b>iones atrapados</b>, un láser “bombea” cada átomo a un estado conocido.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">|ψ₀⟩ = |00…0⟩</p>
+        <p class="gloss">Los símbolos <b>|&nbsp;⟩</b> son solo la notación para “estado” (se lee “ket”). Esto dice: <b>arrancamos con todos los qubits en 0</b>.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>from qiskit import QuantumCircuit
+qc = <span class="kw">QuantumCircuit</span>(2, 2)   <span class="cm"># 2 qubits en |0⟩ + 2 bits</span></pre></div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">02</span><h3 class="step-title">Superposición</h3><span class="step-sub">la piedra en el agua</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 150" role="img" aria-label="Una piedra entra y el agua se bifurca: cada bifurcación es un qubit que reparte el agua en 0 y 1; dos qubits dan cuatro rutas completas (00, 01, 10, 11), que son las respuestas posibles.">
+        <!-- splash -->
+        <g fill="none" stroke="#4cc9e8" stroke-width="1.6">
+          <path d="M28 67 A10 10 0 0 1 28 83" opacity=".9"/>
+          <path d="M23 60 A16 16 0 0 1 23 90" opacity=".55"/>
+          <path d="M18 53 A22 22 0 0 1 18 97" opacity=".3"/>
+        </g>
+        <circle cx="33" cy="75" r="4" fill="#f6a93b"/>
+        <text x="33" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593">PIEDRA</text>
+        <!-- tree branches -->
+        <g stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
+          <line x1="40" y1="75" x2="92" y2="75"/>
+          <line x1="92" y1="75" x2="172" y2="44"/>
+          <line x1="92" y1="75" x2="172" y2="106"/>
+          <line x1="172" y1="44" x2="300" y2="26"/>
+          <line x1="172" y1="44" x2="300" y2="62"/>
+          <line x1="172" y1="106" x2="300" y2="90"/>
+          <line x1="172" y1="106" x2="300" y2="126"/>
+        </g>
+        <!-- fork nodes -->
+        <g fill="#f6a93b"><circle cx="92" cy="75" r="4.5"/><circle cx="172" cy="44" r="4.5"/><circle cx="172" cy="106" r="4.5"/></g>
+        <!-- labels -->
+        <g font-family="IBM Plex Mono,monospace" font-size="9" fill="#a78bfa">
+          <text x="92" y="92">q1</text><text x="176" y="38">q2</text><text x="176" y="122">q2</text>
+        </g>
+        <g font-family="IBM Plex Mono,monospace" font-size="9" fill="#5d7593">
+          <text x="126" y="52">1</text><text x="126" y="100">0</text>
+        </g>
+        <g font-family="IBM Plex Mono,monospace" font-size="10" fill="#4cc9e8">
+          <text x="306" y="30">11</text><text x="306" y="66">10</text><text x="306" y="94">01</text><text x="306" y="130">00</text>
+        </g>
+        <text x="318" y="146" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">RUTAS = RESPUESTAS</text>
+      </svg><figcaption>cada bifurcación es un qubit; el agua va por los dos lados → 2 qubits, 4 rutas (y n qubits, 2ⁿ)</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>Tiras la piedra. Un solo frente de olas entra por <b>todos los corredores a la vez</b>; nadie elige camino, el agua lo llena todo sola. Conviene fijar aquí dos piezas: cada <b>bifurcación</b> del laberinto es un <b>qubit</b> (el agua puede ir por el 0 o por el 1), y un <b>corredor</b> entero —de la entrada a una salida— es una <b>ruta completa</b>: una respuesta. La piedra llena todas las rutas a la vez porque <b>en cada bifurcación el agua se reparte por los dos lados</b>.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Cada qubit deja de valer 0 <i>o</i> 1 y pasa a ser <b>una mezcla de ambos a la vez</b>. Con n qubits coexisten 2ⁿ combinaciones. La puerta <b>Hadamard</b> es la que crea esa mezcla.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Un pulso de microondas calibradísimo (un “medio giro”) golpea el qubit superconductor; o un pulso láser al ion. La <b>duración y la fase exactas</b> lo dejan a medio camino entre 0 y 1.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">H|0⟩ = (|0⟩ + |1⟩)/√2</p>
+        <p class="gloss"><b>H</b> es la puerta Hadamard. Coge un 0 nítido y lo reparte en <b>mitad-0 y mitad-1 a la vez</b>. El <b>√2</b> es solo para que las dos probabilidades sigan sumando 1.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">h</span>(0)
+qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en cada qubit</span></pre></div>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">03</span><h3 class="step-title">Entrelazamiento</h3><span class="step-sub">bifurcaciones atadas</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 116" role="img" aria-label="Dos qubits con olas sincronizadas, unidos por enlaces verticales: se mueven a la vez.">
+        <path d="M30 40 Q51 26 73 40 T116 40 T159 40 T202 40 T245 40 T288 40 T331 40" fill="none" stroke="#4cc9e8" stroke-width="2"/>
+        <path d="M30 84 Q51 70 73 84 T116 84 T159 84 T202 84 T245 84 T288 84 T331 84" fill="none" stroke="#4cc9e8" stroke-width="2"/>
+        <g stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="3 3">
+          <line x1="51" y1="28" x2="51" y2="72"/><line x1="137" y1="28" x2="137" y2="72"/><line x1="223" y1="28" x2="223" y2="72"/><line x1="309" y1="28" x2="309" y2="72"/>
+        </g>
+        <text x="180" y="110" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">DOS QUBITS, ATADOS</text>
+      </svg><figcaption>dos bifurcaciones —dos qubits— que ya no se mueven por separado</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>Hasta ahora cada bifurcación se movía <b>por su cuenta</b>. El entrelazamiento las <b>ata</b>: un enlace —como dos compuertas unidas por un mismo eje— acopla dos bifurcaciones, de modo que lo que el agua hace en una queda ligado a lo que hace en la otra. Ya no son olas sueltas: forman <b>un único oleaje coordinado</b> que <b>no puedes describir bifurcación por bifurcación</b>.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Dos o más qubits quedan <b>correlacionados</b>: ya no se puede describir cada uno por su cuenta. Medir uno te dice algo del otro al instante.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Se aplica una <b>puerta de dos qubits</b> (la CNOT). En superconductores se acoplan dos qubits vecinos vía un “acoplador”; en iones, se usa el <b>movimiento compartido</b> de los átomos en la trampa como bus de conexión.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">(|00⟩ + |11⟩)/√2&nbsp;&nbsp;≠&nbsp;&nbsp;|a⟩ ⊗ |b⟩</p>
+        <p class="gloss">El par vale <b>00 o 11, nunca 01 ni 10</b>: están atados. El “≠” dice que ese estado <b>no se puede separar</b> en “qubit A por un lado, B por otro”. Eso <i>es</i> el entrelazamiento.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">cx</span>(0, 1)   <span class="cm"># CNOT: entrelaza q0 con q1</span></pre></div>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">04</span><h3 class="step-title">El comprobador</h3><span class="step-sub">reconocer, no señalar</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="Cuatro corredores idénticos a la vista, cerrados al fondo; no se distingue cuál es la salida verdadera.">
+        <g fill="none" stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
+          <path d="M30 32 Q45 25 60 32 T90 32 T120 32 T150 32 T180 32 T210 32 T240 32 T270 32 T300 32"/>
+          <path d="M30 56 Q45 49 60 56 T90 56 T120 56 T150 56 T180 56 T210 56 T240 56 T270 56 T300 56"/>
+          <path d="M30 80 Q45 73 60 80 T90 80 T120 80 T150 80 T180 80 T210 80 T240 80 T270 80 T300 80"/>
+          <path d="M30 104 Q45 97 60 104 T90 104 T120 104 T150 104 T180 104 T210 104 T240 104 T270 104 T300 104"/>
+        </g>
+        <polygon points="22,68 12,63 12,73" fill="#4cc9e8"/>
+        <g stroke="#8fa6bf" stroke-width="2"><line x1="306" y1="24" x2="306" y2="40"/><line x1="306" y1="48" x2="306" y2="64"/><line x1="306" y1="72" x2="306" y2="88"/><line x1="306" y1="96" x2="306" y2="112"/></g>
+        <text x="174" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">TODOS IGUALES A SIMPLE VISTA</text>
+      </svg><figcaption>uno es la salida — pero, aunque lo construiste tú, no sabes cuál</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>De los mil corredores, <b>solo uno llega a la salida</b>; los demás mueren en un muro. Eso es lo que distingue al bueno, y <b>no lo decides tú</b>: tener el laberinto construido no es saber por dónde se sale. Por eso sueltas el agua — para que sea ella la que <b>dé con la salida</b>, recorriéndolos todos a la vez.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Se aplica el <b>oráculo</b>: una operación reversible que ejecuta la comprobación sobre <b>toda la superposición a la vez</b>. La función f se evalúa “para todos los caminos” en un solo paso.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>El oráculo no es una pieza mágica: se <b>compila</b> en una secuencia de las puertas de siempre (H, CNOT, rotaciones…) que juntas implementan la comprobación. Es un trocito de programa hecho de pulsos.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">U<sub>f</sub> |x⟩|y⟩ = |x⟩ |y ⊕ f(x)⟩</p>
+        <p class="gloss"><b>U<sub>f</sub></b> es el comprobador. Deja intacta la entrada <b>x</b> y escribe el resultado de la comprobación <b>f(x)</b> en un qubit aparte. El <b>⊕</b> es XOR (sumar quedándote con par/impar), la forma estándar de hacerlo reversible.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">compose</span>(oraculo, inplace=True)
+<span class="cm"># 'oraculo' es el subcircuito que reconoce la solución</span></pre></div>
+    </div>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <blockquote class="pullquote">
+    <p class="eyebrow2">El nudo, deshecho</p>
+    <p>La trampa mental es creer que <span class="em">fabricar</span> algo es lo mismo que <span class="em">resolverlo</span>.</p>
+  </blockquote>
+
+  <!-- STEP 5 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">05</span><h3 class="step-title">La marca</h3><span class="step-sub">la ola que vuelve del revés</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="La ola entra normal y, en el corredor que es la salida verdadera, sale invertida.">
+        <!-- normal entering -->
+        <path d="M16 56 Q35 42 54 56 T92 56 T130 56 T168 56" fill="none" stroke="#4cc9e8" stroke-width="2"/>
+        <!-- inverted leaving -->
+        <path d="M172 56 Q191 70 210 56 T248 56 T286 56 T324 56" fill="none" stroke="#a78bfa" stroke-width="2"/>
+        <!-- true-exit marker -->
+        <line x1="170" y1="24" x2="170" y2="92" stroke="#f6a93b" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="170" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#f6a93b">SALIDA</text>
+        <text x="92" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#4cc9e8">ENTRA NORMAL</text>
+        <text x="250" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">SALE DEL REVÉS</text>
+      </svg><figcaption>la salida verdadera devuelve la ola del revés (marca invisible)</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>El laberinto, por su <b>propia forma</b>, hace que el agua que recorre la <b>salida verdadera</b> vuelva <b>del revés</b> (cresta por valle); la de los callejones vuelve igual. <b>Nadie marcó esa salida a mano</b> — es la estructura del laberinto la que reacciona sola al camino correcto. ¿Por qué del revés y no más alta? Porque una subida visible te chivaría la respuesta antes de tiempo; la vuelta es una marca <b>invisible</b> si miras la superficie ahora (una ola del revés ondula igual de fuerte)… pero decisiva para el choque que viene.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>En las ramas donde f(x)=1, el oráculo <b>estampa un signo menos</b> sobre la amplitud: un <b>cambio de fase</b>. Aún no cambia las probabilidades —solo el signo—. La información de f queda escrita <b>en las fases</b>.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Es un <b>desfase</b>: se retrasa media vuelta la oscilación cuántica de esa componente. Se consigue con <b>puertas de fase</b> (rotaciones Z) dentro del oráculo.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">|x⟩ → (−1)<sup>f(x)</sup> |x⟩</p>
+        <p class="gloss">Si la comprobación acierta (f=1), la onda de esa rama <b>se pone del revés</b> (signo −). Si falla (f=0), se queda igual (×1). <b>Solo cambia el signo</b>, todavía no la probabilidad.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">cz</span>(0, 1)   <span class="cm"># marca de fase: signo − sobre la solución</span></pre></div>
+    </div>
+  </section>
+
+  <!-- STEP 6 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">06</span><h3 class="step-title">Interferencia</h3><span class="step-sub">el truco real</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 156" role="img" aria-label="Arriba, dos olas en oposición de fase que se cancelan a una línea plana (los callejones). Abajo, separada, una ola reforzada que sobrevive en ámbar (la salida).">
+        <path d="M14 26 Q34 13 54 26 T94 26 T134 26 T174 26 T214 26 T254 26 T294 26 T334 26" fill="none" stroke="#e8607d" stroke-width="2"/>
+        <path d="M14 26 Q34 39 54 26 T94 26 T134 26 T174 26 T214 26 T254 26 T294 26 T334 26" fill="none" stroke="#e8607d" stroke-width="2" stroke-dasharray="4 4" opacity=".7"/>
+        <line x1="14" y1="62" x2="300" y2="62" stroke="#5d7593" stroke-width="1.4" stroke-dasharray="3 5"/>
+        <text x="334" y="59" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#92a8c2">= 0</text>
+        <text x="170" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#e8607d">SE ANULAN (CALLEJONES) · CRESTA + VALLE → CALMA</text>
+        <path d="M14 120 Q34 104 54 120 T94 120 T134 120 T174 120 T214 120 T254 120 T294 120 T334 120" fill="none" stroke="#f6a93b" stroke-width="2.8"/>
+        <text x="170" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">SOBREVIVE (SALIDA) · A COMPÁS → MAREJADA</text>
+      </svg></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>Dejas que las olas invertidas y las normales <b>vuelvan a juntarse</b>. Donde cresta encuentra valle, se aplanan: <span class="neg">calma total en los callejones</span>. Donde van a compás, se montan: <span class="pos">marejada en el corredor que lleva a la salida</span>. <i>(Es justo lo que hacen tus auriculares con cancelación de ruido — también son olas, de sonido.)</i></p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Una última capa de Hadamard hace que las amplitudes con signo se sumen. Las incorrectas <span class="neg">se cancelan</span> (destructiva); la correcta <span class="pos">se amplifica</span> (constructiva). Y ese reparto no lo calculas tú número a número: <b>lo ejecuta la propia física al evolucionar el estado</b>. <b>Esto es lo único que un bit clásico no puede hacer.</b></p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Otra tanda de pulsos (las H finales) <b>recombina</b> las componentes. La cancelación es física y literal: dos oscilaciones desfasadas media vuelta se anulan al sumarse.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">amp(|0⟩) = ½·[ (−1)<sup>f(0)</sup> + (−1)<sup>f(1)</sup> ]</p>
+        <p class="gloss">Se <b>suman las dos ramas</b>. Signos iguales → se refuerzan (<span class="pos">±1</span>). Signos opuestos → <span class="neg">se anulan (0)</span>. La interferencia, en una sola línea.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">h</span>(0)
+qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard final → las amplitudes interfieren</span></pre></div>
+    </div>
+  </section>
+
+  <!-- STEP 7 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">07</span><h3 class="step-title">La medida</h3><span class="step-sub">asomarse a mirar</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 116" role="img" aria-label="Cuatro corredores en calma y uno con una gran marejada: al asomarte, eliges el que ruge.">
+        <g stroke="#4cc9e8" stroke-width="1.8" fill="none" opacity=".5" stroke-linecap="round">
+          <path d="M22 64 Q34 60 46 64 T70 64"/>
+          <path d="M86 64 Q98 60 110 64 T134 64"/>
+          <path d="M214 64 Q226 60 238 64 T262 64"/>
+          <path d="M278 64 Q290 60 302 64 T326 64"/>
+        </g>
+        <path d="M150 64 Q174 18 198 64" fill="none" stroke="#f6a93b" stroke-width="3"/>
+        <g font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593" text-anchor="middle">
+          <text x="46" y="84">calma</text><text x="110" y="84">calma</text>
+          <text x="174" y="84" fill="#f6a93b">¡marejada!</text>
+          <text x="238" y="84">calma</text><text x="302" y="84">calma</text>
+        </g>
+        <text x="174" y="106" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#92a8c2">MIRAS UNA VEZ → 0/1</text>
+      </svg><figcaption>calma en los falsos, marejada en el bueno</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>Te asomas a la superficie, <b>una sola vez</b>. Calma en los callejones, marejada en el corredor bueno. Lees el que ruge.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Al medir, la superposición <b>colapsa a una sola</b> combinación clásica. Medir es como <b>tirar un dado</b> en el que cada salida es una cara, y lo pesada que es cada cara es su probabilidad: el <b>cuadrado de su amplitud</b> (regla de Born). La interferencia no quita el azar — <b>carga ese dado</b>: vuelve pesadísima la cara de la salida y casi ingrávidas las demás. Por eso casi siempre sale la buena.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Se lee el estado físico: si un resonador acoplado cambia de frecuencia (superconductores) o si el átomo <b>emite luz</b> al iluminarlo con un láser (iones). Sale un bit clásico: 0 o 1.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">P(x) = |⟨x|ψ⟩|²</p>
+        <p class="gloss">La probabilidad de leer un resultado es <b>el cuadrado de su amplitud</b> (regla de Born). Por eso amplitud nula = nunca sale; amplitud grande = casi siempre.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">measure</span>([0, 1], [0, 1])   <span class="cm"># colapsa a 0/1</span></pre></div>
+    </div>
+  </section>
+
+  <!-- STEP 8 -->
+  <div class="wire"></div>
+  <section class="step">
+    <div class="step-head"><span class="step-num">08</span><h3 class="step-title">Repetición</h3><span class="step-sub">shots</span></div>
+    <div class="card">
+      <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="Histograma de muchas tiradas: varias barras bajas y una barra alta destacada que es la respuesta.">
+        <line x1="34" y1="96" x2="322" y2="96" stroke="#5d7593" stroke-width="1"/>
+        <line x1="34" y1="20" x2="34" y2="96" stroke="#5d7593" stroke-width="1"/>
+        <g>
+          <rect x="46" y="80" width="26" height="16" fill="#4cc9e8" opacity=".55"/>
+          <rect x="84" y="86" width="26" height="10" fill="#4cc9e8" opacity=".55"/>
+          <rect x="122" y="72" width="26" height="24" fill="#4cc9e8" opacity=".55"/>
+          <rect x="160" y="30" width="26" height="66" fill="#f6a93b"/>
+          <rect x="198" y="84" width="26" height="12" fill="#4cc9e8" opacity=".55"/>
+          <rect x="236" y="78" width="26" height="18" fill="#4cc9e8" opacity=".55"/>
+          <rect x="274" y="88" width="26" height="8" fill="#4cc9e8" opacity=".55"/>
+        </g>
+        <text x="173" y="24" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">EL PICO = LA RESPUESTA</text>
+        <text x="24" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593" transform="rotate(-90 24 58)">VECES</text>
+      </svg><figcaption>miles de tiradas → un pico claro</figcaption></figure>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>Como cada vistazo da una salida y queda algo de azar, <b>repites el experimento</b> del estanque varias veces y te quedas con la salida que más se repite.</p></div>
+      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Se prepara y mide el mismo circuito miles de veces. La <b>distribución de resultados</b> dibuja las probabilidades reales; el pico es tu respuesta.</p></div>
+      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>El chip ejecuta el circuito entero una y otra vez (típico: <b>1.000–10.000 shots</b>) y un ordenador clásico cuenta frecuencias y devuelve un histograma.</p></div>
+      <div class="layer L-amber"><span class="lbl">Matemática</span>
+        <p class="formula">P(x) ≈ (veces que sale x) / (total de shots)</p>
+        <p class="gloss">Con muchas tiradas, <b>la frecuencia con que sale cada resultado</b> estima su probabilidad real. Más tiradas, mejor estimación.</p>
+      </div>
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>from qiskit_aer import AerSimulator
+sim = AerSimulator()
+counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
+<span class="cm"># {'00': 7, '11': 1017, ...} → el pico es la respuesta</span></pre></div>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <dl class="glossary">
+    <h2>Glosario rápido</h2>
+    <p class="intro">los términos que aparecen, en una frase cada uno</p>
+    <div class="gitem" id="g-qubit"><dt>Qubit</dt><dd>La unidad cuántica de información. Como un bit, pero puede estar en <b>mezcla de 0 y 1</b> a la vez.</dd></div>
+    <div class="gitem" id="g-ket"><dt>|0⟩ , |1⟩</dt><dd>Notación “ket”: la forma estándar de escribir estados. <b>|0⟩</b> se lee “ket cero”.</dd></div>
+    <div class="gitem" id="g-amplitud"><dt>Amplitud</dt><dd>El número (con <b>signo y fase</b>) asociado a cada posibilidad. Su cuadrado es la probabilidad. Que pueda ser negativa es <b>toda la ventaja cuántica</b>.</dd></div>
+    <div class="gitem" id="g-puerta"><dt>Puerta (gate)</dt><dd>Operación elemental sobre qubits. El equivalente a las puertas lógicas clásicas, pero siempre <b>reversible</b> (una rotación).</dd></div>
+    <div class="gitem" id="g-hadamard"><dt>Hadamard (H)</dt><dd>La puerta que <b>crea superposición</b>: convierte un 0 nítido en mitad-0/mitad-1. Aparece al principio y al final.</dd></div>
+    <div class="gitem" id="g-cnot"><dt>CNOT</dt><dd>Puerta de dos qubits que <b>entrelaza</b>: hace que el estado de uno dependa del otro.</dd></div>
+    <div class="gitem" id="g-oraculo"><dt>Oráculo (U<sub>f</sub>)</dt><dd>El <b>comprobador</b> empaquetado como operación reversible. No contiene la respuesta, contiene cómo reconocerla.</dd></div>
+    <div class="gitem" id="g-fase"><dt>Fase / rotación Z</dt><dd>Girar la “onda” del qubit <b>sin cambiar su probabilidad</b>. Es donde vive la marca (el signo −).</dd></div>
+    <div class="gitem" id="g-bell"><dt>Estado de Bell</dt><dd>El ejemplo más simple de entrelazamiento: dos qubits que valen <b>00 o 11</b>, nunca mezclados.</dd></div>
+    <div class="gitem" id="g-born"><dt>Regla de Born</dt><dd>La ley que conecta el mundo cuántico con lo que ves: <b>probabilidad = |amplitud|²</b>.</dd></div>
+    <div class="gitem" id="g-shots"><dt>Shots</dt><dd>Número de veces que repites el circuito para sacar estadística. Más shots, resultado más fiable.</dd></div>
+  </dl>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <h2>Preguntas que quizá te queden</h2>
+    <p class="intro">los cabos sueltos más habituales</p>
+
+    <div class="qa">
+      <p class="q"><span>01</span>¿Por qué hay azar al repetir, si todo estaba tan calculado?</p>
+      <p class="a">Porque <b>mirar es un acto genuinamente aleatorio</b>: la cara que sale del dado la decide la naturaleza, pesada por las amplitudes. Y aquí está el detalle — la interferencia <b>casi nunca</b> deja los callejones en calma <i>perfecta</i>. La marejada de la salida es enorme, pero en <b>los callejones</b> queda un <b>chapoteo mínimo</b>, una probabilidad pequeña pero no nula. Así que casi siempre sale la buena… y de vez en cuando, una mala. Es un dado cargadísimo hacia el seis: caerá seis casi siempre, pero alguna vez no. Por eso repites: con mil tiradas, <span class="pop">el pico se ve clarísimo</span> y las malas aparecen una o dos veces. Repetir no corrige nada — <b>convierte “muy probable” en “prácticamente seguro”</b>.</p>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span>02</span>¿Entonces es que la máquina falla?</p>
+      <p class="a">No. Ese azar existiría <b>igual en un ordenador cuántico perfecto</b>: es parte de las reglas del juego, no una avería. Aparte de eso, una máquina real <i>sí</i> tiene errores de hardware —ruido, <b>decoherencia</b> (que el estado cuántico se estropee antes de tiempo)— y eso es otra cosa, que se combate con corrección de errores. Pero el azar de los <b>shots</b> no es un defecto: es el funcionamiento normal.</p>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span>03</span>¿Y si hay varias salidas buenas?</p>
+      <p class="a">Entonces la interferencia levanta <b>marejada en todas ellas</b> a la vez, y al repetir verás <b>varios picos</b> en lugar de uno. El dado queda cargado hacia ese grupo de caras. Algoritmos como el de Grover incluso ajustan cuántas “rondas de olas” hacen falta según cuántas respuestas buenas se esperan.</p>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="why">
+    <h2>Por qué la naturaleza puede calcular por nosotros</h2>
+    <p>Vuelve a la doble rendija. Un fotón no <b>elige</b> una rendija: las cruza <b>las dos a la vez</b>, y los dos caminos chocan — se suman donde coinciden, <span class="pop2">se cancelan</span> donde van en contrafase. Eso es, en pequeño, todo lo que hace un ordenador cuántico.</p>
+    <p>La clave está ahí: <b>una onda lleva todas las posibilidades a la vez</b>, cada una con su amplitud. Eso es la superposición. Y como las amplitudes tienen fase, <b>se suman y se restan solas</b>. La naturaleza ya hace esto en cada partícula, <span class="pop2">gratis</span>, porque es lo que es — no lo calculamos nosotros número a número.</p>
+    <p>Por eso un fotón puede “ayudarnos”. Un ordenador cuántico es una <b>doble rendija gigante</b>, con millones de caminos, donde colocamos las rendijas —el circuito— para que la franja brillante caiga sobre la respuesta. <b>Nosotros montamos el escenario; la interferencia la pone la física.</b></p>
+    <p>Y conviene ser honestos: <b>nadie sabe <i>por qué</i></b> la realidad es así. Tenemos las matemáticas, que aciertan con una precisión perfecta, pero por qué el universo funciona con amplitudes que se cancelan sigue siendo un misterio sin resolver, sin acuerdo entre los físicos. Como dijo Feynman, “nadie entiende la mecánica cuántica”. <b>No hace falta entender el porqué para usarla</b>: funciona, y con eso basta.</p>
+    <p class="kicker">Nosotros solo elegimos qué debe sobrevivir al choque.<br>El choque —el cálculo— lo hace la naturaleza.</p>
+  </section>
+
+  <!-- CLOSE -->
+  <div class="close">
+    <h2>La única idea que hay que llevarse</h2>
+    <p><b>No das la respuesta: das el comprobador</b> — el laberinto construido a partir del problema, no de la solución. No sabes a qué corredor lleva la salida (construirlo no es resolverlo, igual que plantear un sudoku no es resolverlo). Sueltas la ola, y <span class="pop">la naturaleza, que lleva moviendo olas desde siempre, hace el trabajo por ti</span>: aplana los callejones y levanta marejada en la salida verdadera. Tú solo lo diseñas y te asomas al final.</p>
+    <p>Por eso <b>no es un ordenador más rápido para todo</b>. Solo gana en problemas difíciles de <b>resolver</b> pero fáciles de <b>comprobar</b>. Si reconocer la respuesta buena es tan lento como buscarla, no hay reconocedor que construir, y no hay ventaja.</p>
+    <div class="when">
+      <div class="yes"><div class="k">Donde sí brilla</div>Factorizar números enormes, buscar en el caos, simular moléculas, optimizar. <b>Aguja en un pajar gigante.</b></div>
+      <div class="no"><div class="k">Donde no aporta</div>Casi todo el día a día de tu portátil: navegar, escribir, vídeo, hojas de cálculo. <b>No hay nada que cancelar.</b></div>
+    </div>
+    <p class="verdict">No es un ordenador más rápido para todo.<br>Es una máquina para problemas difíciles de resolver pero fáciles de comprobar:<br>le das la forma de reconocer la respuesta, y la naturaleza la encuentra sola.</p>
+  </div>
+
+  <div class="coda">
+    <h3>Y esto es apenas el principio</h3>
+    <p>Los ordenadores cuánticos de hoy son <b>los primeros</b>, y son toscos: pocos qubits, frágiles y llenos de ruido. Apenas aprovechan una <b>esquina diminuta</b> de lo que la mecánica cuántica ya permite, y solo conocemos un puñado de formas de usarla. Es razonable esperar máquinas <b>muy superiores</b> —más estables, con corrección de errores y con algoritmos que aún no se han inventado— capaces de exprimir <span class="eng">el motor del universo</span> mucho mejor. No para todo: seguirán brillando solo donde la interferencia ayuda. Pero en mucho más de lo que hoy imaginamos.</p>
+  </div>
+
+  <p class="foot">superposición → marca → interferencia → medida · el resto es ingeniería</p>
+
+  <div class="credits">
+    <span class="v">v0.1</span>
+    <span>·</span>
+    <span>29 jun 2026</span>
+    <span>·</span>
+    <a href="https://github.com/roberodin" target="_blank" rel="noopener">@roberodin</a>
+  </div>
+
+</div>
+<script>
+(function(){
+  var terms = [
+    {re:/\bestado de Bell\b/i, id:'g-bell'},
+    {re:/\bregla de Born\b/i,  id:'g-born'},
+    {re:/\bHadamard\b/i,       id:'g-hadamard'},
+    {re:/\bCNOT\b/i,           id:'g-cnot'},
+    {re:/\bor[aá]culos?\b/i,   id:'g-oraculo'},
+    {re:/\bamplitudes?\b/i,    id:'g-amplitud'},
+    {re:/\bqubits?\b/i,        id:'g-qubit'},
+    {re:/\bpuertas?\b/i,       id:'g-puerta'},
+    {re:/\bfase\b/i,           id:'g-fase'},
+    {re:/\bshots?\b/i,         id:'g-shots'}
+  ];
+  var EXCL = 'pre,code,.glossary,.formula,h1,h2,h3,a,.gt,.lbl,.chip,.step-num,figcaption,.eyebrow,.eyebrow2,.eyebrow3,.step-sub';
+  var root = document.querySelector('.wrap');
+  function excluded(node){ var el = node.parentElement; return !el || el.closest(EXCL); }
+  function wrapFirst(t){
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while(n = w.nextNode()){
+      if(excluded(n)) continue;
+      var m = t.re.exec(n.nodeValue);
+      if(m){
+        var matchNode = n.splitText(m.index);
+        matchNode.splitText(m[0].length);
+        var s = document.createElement('span');
+        s.className = 'gt'; s.setAttribute('data-id', t.id);
+        matchNode.parentNode.insertBefore(s, matchNode);
+        s.appendChild(matchNode);
+        return;
+      }
+    }
+  }
+  terms.forEach(wrapFirst);
+
+  var pop = document.createElement('div');
+  pop.id = 'gt-pop';
+  document.body.appendChild(pop);
+  function showPop(span){
+    var item = document.getElementById(span.getAttribute('data-id'));
+    if(!item) return;
+    pop.innerHTML = '<strong>'+item.querySelector('dt').textContent+'</strong>'+item.querySelector('dd').innerHTML;
+    pop.style.display = 'block';
+    var r = span.getBoundingClientRect();
+    var pw = Math.min(280, window.innerWidth - 20);
+    var left = r.left + window.scrollX;
+    if(left + pw > window.scrollX + window.innerWidth - 10) left = window.scrollX + window.innerWidth - 10 - pw;
+    if(left < window.scrollX + 10) left = window.scrollX + 10;
+    pop.style.left = left + 'px';
+    pop.style.top = (r.bottom + window.scrollY + 6) + 'px';
+  }
+  document.addEventListener('click', function(e){
+    if(e.target.closest('#gt-pop')) return;
+    var span = e.target.closest('.gt');
+    if(span){ showPop(span); } else { pop.style.display = 'none'; }
+  });
+  window.addEventListener('scroll', function(){ pop.style.display = 'none'; }, {passive:true});
+})();
+</script>
+</body>
+</html>
