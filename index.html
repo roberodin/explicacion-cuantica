@@ -213,7 +213,96 @@
   .credits .v{color:var(--code);font-weight:600}
   .credits a{color:var(--water);text-decoration:none;border-bottom:1px solid transparent}
   .credits a:hover{border-bottom-color:var(--water)}
+
+  /* ============ ANIMACIÓN DE LAS ILUSTRACIONES ============ */
+  /* Todo vive dentro de no-preference: si el usuario pide menos movimiento
+     o no hay JS, los SVG se ven exactamente igual que en estático. */
+  @media (prefers-reduced-motion: no-preference){
+    :root{ --vez:cubic-bezier(.45,.05,.35,1); }
+
+    /* estado oculto inicial de los trazos "dibujados" — solo si hay JS */
+    .js .branches line, .js .mark-in, .js .mark-out{
+      stroke-dasharray:var(--len,320); stroke-dashoffset:var(--len,320);
+    }
+
+    /* piezas que se transforman: origen relativo a su propia caja */
+    .emit-src,.emit-slit,.splash,.stone,.src-dot,.forks circle,.ident-wave,
+    .probe-arrow,.ent-wave,.wave-anti,.wave-survive,.meas-surge,.bars rect{
+      transform-box:fill-box;
+    }
+
+    @keyframes vz-draw{ to{ stroke-dashoffset:0 } }
+    @keyframes vz-breathe{ 0%,100%{opacity:.5} 50%{opacity:1} }
+    @keyframes vz-calm{ 0%,100%{opacity:.4} 50%{opacity:.7} }
+    @keyframes vz-emit{ 0%{opacity:.45;transform:scale(.95)} 50%{opacity:1;transform:scale(1.06)} 100%{opacity:.45;transform:scale(.95)} }
+    @keyframes vz-dot{ 0%,100%{transform:scale(1);opacity:.85} 50%{transform:scale(1.5);opacity:1} }
+    @keyframes vz-sway{ 0%,100%{transform:translateX(-4px)} 50%{transform:translateX(4px)} }
+    @keyframes vz-link{ 0%,100%{opacity:.28} 50%{opacity:1} }
+    @keyframes vz-stone{ 0%{transform:translateY(-7px) scale(.6);opacity:0} 35%{opacity:1} 65%{transform:translateY(0) scale(1.15)} 100%{transform:translateY(0) scale(1)} }
+    @keyframes vz-arrow{ 0%,100%{transform:translateX(0);opacity:.55} 50%{transform:translateX(-3px);opacity:1} }
+    @keyframes vz-axis{ 0%,100%{opacity:.45} 30%,42%{opacity:1} }
+    @keyframes vz-markin{ 0%{stroke-dashoffset:var(--len);opacity:1} 28%{stroke-dashoffset:0} 58%{stroke-dashoffset:0;opacity:1} 74%{opacity:0} 100%{stroke-dashoffset:0;opacity:0} }
+    @keyframes vz-markout{ 0%{stroke-dashoffset:var(--len);opacity:0} 30%{opacity:0} 34%{opacity:1} 62%{stroke-dashoffset:0;opacity:1} 84%{stroke-dashoffset:0;opacity:1} 96%{opacity:0} 100%{stroke-dashoffset:0;opacity:0} }
+    @keyframes vz-cancel{ 0%,26%{transform:scaleY(1)} 56%,80%{transform:scaleY(.05)} 100%{transform:scaleY(1)} }
+    @keyframes vz-survive{ 0%,100%{transform:scaleY(.5);opacity:.6} 55%{transform:scaleY(1.2);opacity:1} }
+    @keyframes vz-surge{ 0%,100%{transform:scaleY(.62)} 50%{transform:scaleY(1.12)} }
+    @keyframes vz-bar{ from{transform:scaleY(0)} to{transform:scaleY(1)} }
+
+    /* ── intro · doble rendija ── */
+    .viz-in .emit-src{ transform-origin:0% 50%; animation:vz-emit 3s var(--vez) infinite }
+    .viz-in .emit-slit{ transform-origin:0% 50%; animation:vz-emit 3s var(--vez) .5s infinite }
+    .viz-in .fringe{ animation:vz-breathe 2.6s var(--vez) infinite }
+    .viz-in .src-dot{ transform-origin:center; animation:vz-dot 2.4s var(--vez) infinite }
+    .viz-in .cancel-dots{ animation:vz-link 2.6s var(--vez) infinite }
+
+    /* ── 01 · agua en calma ── */
+    .viz-in .calm-water{ animation:vz-calm 4.5s ease-in-out infinite }
+    .viz-in .drift{ animation:vz-link 5s ease-in-out infinite }
+
+    /* ── 02 · superposición (piedra + ramas) ──
+       stone y el "dibujado" de ramas son de entrada (una sola vez → .viz-seen);
+       el chapoteo emana desde la piedra (a la derecha, x≈33) → origen 100% */
+    .viz-seen .stone{ transform-origin:center; animation:vz-stone 1.1s var(--vez) both }
+    .viz-in .splash{ transform-origin:100% 50%; animation:vz-emit 2.6s var(--vez) .3s infinite }
+    .viz-seen .branches line{ animation:vz-draw .55s var(--vez) both }
+    .viz-seen .branches line:nth-child(1){ animation-delay:.15s }
+    .viz-seen .branches line:nth-child(2),.viz-seen .branches line:nth-child(3){ animation-delay:.5s }
+    .viz-seen .branches line:nth-child(n+4){ animation-delay:.85s }
+    .viz-in .forks circle{ transform-origin:center; animation:vz-dot 2.2s var(--vez) 1.2s infinite }
+
+    /* ── 03 · entrelazamiento (olas acompasadas) ── */
+    .viz-in .ent-wave{ transform-origin:center; animation:vz-sway 3.6s ease-in-out infinite }
+    .viz-in .ent-link{ animation:vz-link 3.6s ease-in-out infinite }
+
+    /* ── 04 · comprobador (corredores idénticos) ── */
+    .viz-in .ident-wave{ transform-origin:center; animation:vz-sway 4.2s ease-in-out infinite }
+    .viz-in .probe-arrow{ transform-origin:center; animation:vz-arrow 2.4s var(--vez) infinite }
+
+    /* ── 05 · la marca (entra normal, sale del revés) ── */
+    .viz-in .mark-in{ animation:vz-markin 3.4s var(--vez) infinite }
+    .viz-in .mark-out{ animation:vz-markout 3.4s var(--vez) infinite }
+    .viz-in .mark-axis{ animation:vz-axis 3.4s var(--vez) infinite }
+
+    /* ── 06 · interferencia (cancelan / sobrevive) ── */
+    .viz-in .wave-anti{ transform-origin:center; animation:vz-cancel 3.4s var(--vez) infinite }
+    .viz-in .wave-survive{ transform-origin:center; animation:vz-survive 3.4s var(--vez) infinite }
+
+    /* ── 07 · la medida (marejada) ── */
+    .viz-in .meas-surge{ transform-origin:center bottom; animation:vz-surge 2.2s var(--vez) infinite }
+    .viz-in .meas-calm{ animation:vz-calm 4s ease-in-out infinite }
+
+    /* ── 08 · repetición (histograma que crece, una sola vez → .viz-seen) ── */
+    .viz-seen .bars rect{ transform-origin:center bottom; animation:vz-bar .6s var(--vez) both }
+    .viz-seen .bars rect:nth-child(1){ animation-delay:.10s }
+    .viz-seen .bars rect:nth-child(2){ animation-delay:.20s }
+    .viz-seen .bars rect:nth-child(3){ animation-delay:.30s }
+    .viz-seen .bars rect:nth-child(4){ animation-delay:.52s }
+    .viz-seen .bars rect:nth-child(5){ animation-delay:.42s }
+    .viz-seen .bars rect:nth-child(6){ animation-delay:.32s }
+    .viz-seen .bars rect:nth-child(7){ animation-delay:.22s }
+  }
 </style>
+<script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div class="wrap">
@@ -233,28 +322,28 @@
   <div class="realworld">
     <p class="eyebrow3">Esto no es una metáfora</p>
     <figure class="diagram"><svg viewBox="0 0 340 150" role="img" aria-label="Experimento de la doble rendija: una fuente emite ondas que pasan por dos rendijas y, en la pantalla, forman franjas brillantes (donde se suman) y vacías (donde se cancelan).">
-      <circle cx="16" cy="75" r="3.5" fill="#f6a93b"/>
-      <g fill="none" stroke="#4cc9e8" stroke-width="1.4">
+      <circle class="src-dot" cx="16" cy="75" r="3.5" fill="#f6a93b"/>
+      <g class="emit-src" fill="none" stroke="#4cc9e8" stroke-width="1.4">
         <path d="M22 64 A11 11 0 0 1 22 86" opacity=".8"/>
         <path d="M29 55 A20 20 0 0 1 29 95" opacity=".5"/>
         <path d="M36 47 A28 28 0 0 1 36 103" opacity=".28"/>
       </g>
       <g fill="#8fa6bf"><rect x="106" y="18" width="5" height="44"/><rect x="106" y="70" width="5" height="10"/><rect x="106" y="88" width="5" height="44"/></g>
       <text x="108" y="12" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#8fa6bf">2 RENDIJAS</text>
-      <g fill="none" stroke="#4cc9e8" stroke-width="1.3">
+      <g class="emit-slit" fill="none" stroke="#4cc9e8" stroke-width="1.3">
         <path d="M119 58 A9 9 0 0 1 119 74" opacity=".55"/><path d="M128 50 A17 17 0 0 1 128 82" opacity=".38"/><path d="M137 43 A24 24 0 0 1 137 89" opacity=".22"/>
         <path d="M119 76 A9 9 0 0 1 119 92" opacity=".55"/><path d="M128 68 A17 17 0 0 1 128 100" opacity=".38"/><path d="M137 61 A24 24 0 0 1 137 107" opacity=".22"/>
       </g>
       <line x1="300" y1="18" x2="300" y2="132" stroke="#8fa6bf" stroke-width="2"/>
       <text x="300" y="144" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#8fa6bf">PANTALLA</text>
-      <g stroke="#f6a93b" stroke-linecap="round">
+      <g class="fringe" stroke="#f6a93b" stroke-linecap="round">
         <line x1="272" y1="75" x2="298" y2="75" stroke-width="6"/>
         <line x1="280" y1="52" x2="298" y2="52" stroke-width="5" opacity=".85"/>
         <line x1="280" y1="98" x2="298" y2="98" stroke-width="5" opacity=".85"/>
         <line x1="286" y1="30" x2="298" y2="30" stroke-width="4" opacity=".55"/>
         <line x1="286" y1="120" x2="298" y2="120" stroke-width="4" opacity=".55"/>
       </g>
-      <g fill="none" stroke="#e8607d" stroke-width="1.4"><circle cx="293" cy="63" r="2.4"/><circle cx="293" cy="87" r="2.4"/></g>
+      <g class="cancel-dots" fill="none" stroke="#e8607d" stroke-width="1.4"><circle cx="293" cy="63" r="2.4"/><circle cx="293" cy="87" r="2.4"/></g>
     </svg><figcaption>la doble rendija: <span style="color:#f6a93b">brillante</span> donde las ondas se suman, <span style="color:#e8607d">vacío</span> donde se cancelan</figcaption></figure>
     <p>Dispara fotones de uno en uno por dos rendijas y, tras muchos, la pantalla muestra <b>franjas</b>: zonas llenas y zonas <b>vacías</b>. Un solo fotón pasa por <span class="seg">las dos rendijas a la vez</span> —como una onda— y se interfiere consigo mismo. El agua del laberinto no es un truco que inventamos: <b>es lo que de verdad hace una partícula</b>.</p>
     <p class="later">Volvemos a ello al final, para ver por qué eso permite que la naturaleza calcule por nosotros.</p>
@@ -275,9 +364,9 @@
     <div class="step-head"><span class="step-num">01</span><h3 class="step-title">El estado inicial</h3><span class="step-sub">el agua en calma</span></div>
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 104" role="img" aria-label="Tres líneas de agua perfectamente planas, en calma, etiquetadas como cero.">
-        <line x1="62" y1="20" x2="62" y2="92" stroke="#5d7593" stroke-width="1" stroke-dasharray="3 4"/>
+        <line class="drift" x1="62" y1="20" x2="62" y2="92" stroke="#5d7593" stroke-width="1" stroke-dasharray="3 4"/>
         <text x="62" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593">ENTRADA</text>
-        <g stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
+        <g class="calm-water" stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
           <line x1="70" y1="34" x2="322" y2="34"/><line x1="70" y1="58" x2="322" y2="58"/><line x1="70" y1="82" x2="322" y2="82"/>
         </g>
         <g fill="#92a8c2" font-family="IBM Plex Mono,monospace" font-size="13">
@@ -303,15 +392,15 @@ qc = <span class="kw">QuantumCircuit</span>(2, 2)   <span class="cm"># 2 qubits 
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 150" role="img" aria-label="Una piedra entra y el agua se bifurca: cada bifurcación es un qubit que reparte el agua en 0 y 1; dos qubits dan cuatro rutas completas (00, 01, 10, 11), que son las respuestas posibles.">
         <!-- splash -->
-        <g fill="none" stroke="#4cc9e8" stroke-width="1.6">
+        <g class="splash" fill="none" stroke="#4cc9e8" stroke-width="1.6">
           <path d="M28 67 A10 10 0 0 1 28 83" opacity=".9"/>
           <path d="M23 60 A16 16 0 0 1 23 90" opacity=".55"/>
           <path d="M18 53 A22 22 0 0 1 18 97" opacity=".3"/>
         </g>
-        <circle cx="33" cy="75" r="4" fill="#f6a93b"/>
+        <circle class="stone" cx="33" cy="75" r="4" fill="#f6a93b"/>
         <text x="33" y="112" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593">PIEDRA</text>
         <!-- tree branches -->
-        <g stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
+        <g class="branches" stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
           <line x1="40" y1="75" x2="92" y2="75"/>
           <line x1="92" y1="75" x2="172" y2="44"/>
           <line x1="92" y1="75" x2="172" y2="106"/>
@@ -321,7 +410,7 @@ qc = <span class="kw">QuantumCircuit</span>(2, 2)   <span class="cm"># 2 qubits 
           <line x1="172" y1="106" x2="300" y2="126"/>
         </g>
         <!-- fork nodes -->
-        <g fill="#f6a93b"><circle cx="92" cy="75" r="4.5"/><circle cx="172" cy="44" r="4.5"/><circle cx="172" cy="106" r="4.5"/></g>
+        <g class="forks" fill="#f6a93b"><circle cx="92" cy="75" r="4.5"/><circle cx="172" cy="44" r="4.5"/><circle cx="172" cy="106" r="4.5"/></g>
         <!-- labels -->
         <g font-family="IBM Plex Mono,monospace" font-size="9" fill="#a78bfa">
           <text x="92" y="92">q1</text><text x="176" y="38">q2</text><text x="176" y="122">q2</text>
@@ -352,9 +441,9 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
     <div class="step-head"><span class="step-num">03</span><h3 class="step-title">Entrelazamiento</h3><span class="step-sub">bifurcaciones atadas</span></div>
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 116" role="img" aria-label="Dos qubits con olas sincronizadas, unidos por enlaces verticales: se mueven a la vez.">
-        <path d="M30 40 Q51 26 73 40 T116 40 T159 40 T202 40 T245 40 T288 40 T331 40" fill="none" stroke="#4cc9e8" stroke-width="2"/>
-        <path d="M30 84 Q51 70 73 84 T116 84 T159 84 T202 84 T245 84 T288 84 T331 84" fill="none" stroke="#4cc9e8" stroke-width="2"/>
-        <g stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="3 3">
+        <path class="ent-wave" d="M30 40 Q51 26 73 40 T116 40 T159 40 T202 40 T245 40 T288 40 T331 40" fill="none" stroke="#4cc9e8" stroke-width="2"/>
+        <path class="ent-wave" d="M30 84 Q51 70 73 84 T116 84 T159 84 T202 84 T245 84 T288 84 T331 84" fill="none" stroke="#4cc9e8" stroke-width="2"/>
+        <g class="ent-link" stroke="#a78bfa" stroke-width="1.4" stroke-dasharray="3 3">
           <line x1="51" y1="28" x2="51" y2="72"/><line x1="137" y1="28" x2="137" y2="72"/><line x1="223" y1="28" x2="223" y2="72"/><line x1="309" y1="28" x2="309" y2="72"/>
         </g>
         <text x="180" y="110" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">DOS QUBITS, ATADOS</text>
@@ -376,13 +465,13 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
     <div class="step-head"><span class="step-num">04</span><h3 class="step-title">El comprobador</h3><span class="step-sub">reconocer, no señalar</span></div>
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="Cuatro corredores idénticos a la vista, cerrados al fondo; no se distingue cuál es la salida verdadera.">
-        <g fill="none" stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
+        <g class="ident-wave" fill="none" stroke="#4cc9e8" stroke-width="2" stroke-linecap="round">
           <path d="M30 32 Q45 25 60 32 T90 32 T120 32 T150 32 T180 32 T210 32 T240 32 T270 32 T300 32"/>
           <path d="M30 56 Q45 49 60 56 T90 56 T120 56 T150 56 T180 56 T210 56 T240 56 T270 56 T300 56"/>
           <path d="M30 80 Q45 73 60 80 T90 80 T120 80 T150 80 T180 80 T210 80 T240 80 T270 80 T300 80"/>
           <path d="M30 104 Q45 97 60 104 T90 104 T120 104 T150 104 T180 104 T210 104 T240 104 T270 104 T300 104"/>
         </g>
-        <polygon points="22,68 12,63 12,73" fill="#4cc9e8"/>
+        <polygon class="probe-arrow" points="22,68 12,63 12,73" fill="#4cc9e8"/>
         <g stroke="#8fa6bf" stroke-width="2"><line x1="306" y1="24" x2="306" y2="40"/><line x1="306" y1="48" x2="306" y2="64"/><line x1="306" y1="72" x2="306" y2="88"/><line x1="306" y1="96" x2="306" y2="112"/></g>
         <text x="174" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">TODOS IGUALES A SIMPLE VISTA</text>
       </svg><figcaption>uno es la salida — pero, aunque lo construiste tú, no sabes cuál</figcaption></figure>
@@ -411,11 +500,11 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="La ola entra normal y, en el corredor que es la salida verdadera, sale invertida.">
         <!-- normal entering -->
-        <path d="M16 56 Q35 42 54 56 T92 56 T130 56 T168 56" fill="none" stroke="#4cc9e8" stroke-width="2"/>
+        <path class="mark-in" d="M16 56 Q35 42 54 56 T92 56 T130 56 T168 56" fill="none" stroke="#4cc9e8" stroke-width="2"/>
         <!-- inverted leaving -->
-        <path d="M172 56 Q191 70 210 56 T248 56 T286 56 T324 56" fill="none" stroke="#a78bfa" stroke-width="2"/>
+        <path class="mark-out" d="M172 56 Q191 70 210 56 T248 56 T286 56 T324 56" fill="none" stroke="#a78bfa" stroke-width="2"/>
         <!-- true-exit marker -->
-        <line x1="170" y1="24" x2="170" y2="92" stroke="#f6a93b" stroke-width="1" stroke-dasharray="3 3"/>
+        <line class="mark-axis" x1="170" y1="24" x2="170" y2="92" stroke="#f6a93b" stroke-width="1" stroke-dasharray="3 3"/>
         <text x="170" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#f6a93b">SALIDA</text>
         <text x="92" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#4cc9e8">ENTRA NORMAL</text>
         <text x="250" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">SALE DEL REVÉS</text>
@@ -437,12 +526,12 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
     <div class="step-head"><span class="step-num">06</span><h3 class="step-title">Interferencia</h3><span class="step-sub">el truco real</span></div>
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 156" role="img" aria-label="Arriba, dos olas en oposición de fase que se cancelan a una línea plana (los callejones). Abajo, separada, una ola reforzada que sobrevive en ámbar (la salida).">
-        <path d="M14 26 Q34 13 54 26 T94 26 T134 26 T174 26 T214 26 T254 26 T294 26 T334 26" fill="none" stroke="#e8607d" stroke-width="2"/>
-        <path d="M14 26 Q34 39 54 26 T94 26 T134 26 T174 26 T214 26 T254 26 T294 26 T334 26" fill="none" stroke="#e8607d" stroke-width="2" stroke-dasharray="4 4" opacity=".7"/>
+        <path class="wave-anti" d="M14 26 Q34 13 54 26 T94 26 T134 26 T174 26 T214 26 T254 26 T294 26 T334 26" fill="none" stroke="#e8607d" stroke-width="2"/>
+        <path class="wave-anti" d="M14 26 Q34 39 54 26 T94 26 T134 26 T174 26 T214 26 T254 26 T294 26 T334 26" fill="none" stroke="#e8607d" stroke-width="2" stroke-dasharray="4 4" opacity=".7"/>
         <line x1="14" y1="62" x2="300" y2="62" stroke="#5d7593" stroke-width="1.4" stroke-dasharray="3 5"/>
         <text x="334" y="59" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="9" fill="#92a8c2">= 0</text>
         <text x="170" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#e8607d">SE ANULAN (CALLEJONES) · CRESTA + VALLE → CALMA</text>
-        <path d="M14 120 Q34 104 54 120 T94 120 T134 120 T174 120 T214 120 T254 120 T294 120 T334 120" fill="none" stroke="#f6a93b" stroke-width="2.8"/>
+        <path class="wave-survive" d="M14 120 Q34 104 54 120 T94 120 T134 120 T174 120 T214 120 T254 120 T294 120 T334 120" fill="none" stroke="#f6a93b" stroke-width="2.8"/>
         <text x="170" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">SOBREVIVE (SALIDA) · A COMPÁS → MAREJADA</text>
       </svg></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>Dejas que las olas invertidas y las normales <b>vuelvan a juntarse</b>. Donde cresta encuentra valle, se aplanan: <span class="neg">calma total en los callejones</span>. Donde van a compás, se montan: <span class="pos">marejada en el corredor que lleva a la salida</span>. <i>(Es justo lo que hacen tus auriculares con cancelación de ruido — también son olas, de sonido.)</i></p></div>
@@ -463,13 +552,13 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard final → las ampl
     <div class="step-head"><span class="step-num">07</span><h3 class="step-title">La medida</h3><span class="step-sub">asomarse a mirar</span></div>
     <div class="card">
       <figure class="diagram"><svg viewBox="0 0 340 116" role="img" aria-label="Cuatro corredores en calma y uno con una gran marejada: al asomarte, eliges el que ruge.">
-        <g stroke="#4cc9e8" stroke-width="1.8" fill="none" opacity=".5" stroke-linecap="round">
+        <g class="meas-calm" stroke="#4cc9e8" stroke-width="1.8" fill="none" opacity=".5" stroke-linecap="round">
           <path d="M22 64 Q34 60 46 64 T70 64"/>
           <path d="M86 64 Q98 60 110 64 T134 64"/>
           <path d="M214 64 Q226 60 238 64 T262 64"/>
           <path d="M278 64 Q290 60 302 64 T326 64"/>
         </g>
-        <path d="M150 64 Q174 18 198 64" fill="none" stroke="#f6a93b" stroke-width="3"/>
+        <path class="meas-surge" d="M150 64 Q174 18 198 64" fill="none" stroke="#f6a93b" stroke-width="3"/>
         <g font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593" text-anchor="middle">
           <text x="46" y="84">calma</text><text x="110" y="84">calma</text>
           <text x="174" y="84" fill="#f6a93b">¡marejada!</text>
@@ -496,7 +585,7 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard final → las ampl
       <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="Histograma de muchas tiradas: varias barras bajas y una barra alta destacada que es la respuesta.">
         <line x1="34" y1="96" x2="322" y2="96" stroke="#5d7593" stroke-width="1"/>
         <line x1="34" y1="20" x2="34" y2="96" stroke="#5d7593" stroke-width="1"/>
-        <g>
+        <g class="bars">
           <rect x="46" y="80" width="26" height="16" fill="#4cc9e8" opacity=".55"/>
           <rect x="84" y="86" width="26" height="10" fill="#4cc9e8" opacity=".55"/>
           <rect x="122" y="72" width="26" height="24" fill="#4cc9e8" opacity=".55"/>
@@ -655,6 +744,28 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     if(span){ showPop(span); } else { pop.style.display = 'none'; }
   });
   window.addEventListener('scroll', function(){ pop.style.display = 'none'; }, {passive:true});
+})();
+</script>
+<script>
+/* Anima las ilustraciones al entrar en pantalla; respeta reduce-motion. */
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  // Mide la longitud real de cada trazo "dibujado" para que el barrido sea uniforme.
+  document.querySelectorAll('.branches line, .mark-in, .mark-out').forEach(function(el){
+    try{ el.style.setProperty('--len', Math.ceil(el.getTotalLength())); }catch(e){}
+  });
+  var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if(mq.matches) return;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      // viz-seen es permanente: las animaciones de entrada (piedra, dibujado,
+      // histograma) corren una sola vez y no se rehacen al volver a hacer scroll.
+      if(en.isIntersecting) en.target.classList.add('viz-seen');
+      // viz-in se enciende/apaga: los bucles ambientales no gastan CPU fuera de pantalla.
+      en.target.classList.toggle('viz-in', en.isIntersecting);
+    });
+  }, {threshold:0.2, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.diagram svg').forEach(function(s){ io.observe(s); });
 })();
 </script>
 </body>
