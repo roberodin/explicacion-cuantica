@@ -62,8 +62,9 @@
 
   /* LEGEND */
   .legend{margin:30px 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px 20px}
-  .legend h2{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.24em;
-    text-transform:uppercase;color:var(--faint);margin:0 0 14px;font-weight:500}
+  .legend h2{font-family:"Space Grotesk",sans-serif;font-size:clamp(19px,3.6vw,22px);letter-spacing:-.01em;
+    color:var(--ink);margin:0 0 5px;font-weight:600}
+  .legend h2 em{font-style:normal;color:var(--water)}
   .legend .row{display:flex;gap:13px;align-items:flex-start;margin-bottom:11px}
   .legend .row:last-child{margin-bottom:0}
   .chip{flex:none;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.1em;
@@ -71,7 +72,35 @@
     border:1px solid currentColor;min-width:128px;text-align:center}
   .c-water{color:var(--water)} .c-quant{color:var(--quant)}
   .c-steel{color:var(--steel)} .c-amber{color:var(--amber)} .c-code{color:var(--code)}
-  .legend .row span:not(.chip){color:var(--mut);font-size:13.5px;padding-top:2px}
+  .legend .row-desc{color:var(--mut);font-size:13.5px;padding-top:2px}
+
+  /* LEYENDA INTERACTIVA · selector de profundidad */
+  .legend-hint{display:block;margin:0 0 16px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.04em;color:var(--faint);font-weight:400}
+  .chip-toggle{flex:none;display:flex;flex-direction:column;gap:4px;align-items:stretch;
+    background:none;border:0;padding:0;margin:0;font:inherit;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;transition:opacity .15s,filter .15s,transform .08s}
+  .chip-toggle .chip{margin:0;transition:background .15s,border-style .15s}
+  .chip-toggle .chip::before{content:"✓ ";font-weight:700}
+  .chip-toggle .tier{font-family:"IBM Plex Mono",monospace;font-size:9.5px;letter-spacing:.02em;
+    text-align:center;color:var(--faint);white-space:nowrap}
+  .chip-toggle[aria-pressed="true"] .chip{background:color-mix(in srgb,currentColor 15%,transparent)}
+  .chip-toggle[aria-pressed="true"]:hover .chip{background:color-mix(in srgb,currentColor 26%,transparent)}
+  .chip-toggle[aria-pressed="false"]{opacity:.42;filter:grayscale(.5)}
+  .chip-toggle[aria-pressed="false"] .chip{border-style:dashed}
+  .chip-toggle[aria-pressed="false"] .chip::before{content:"+ "}
+  .chip-toggle[aria-pressed="false"]:hover{opacity:.72;filter:grayscale(.2)}
+  .chip-toggle:active{transform:scale(.97)}
+  /* capa base (analogía): siempre activa, no se puede apagar */
+  .chip-toggle[data-locked]{cursor:default}
+  .chip-toggle[data-locked]:hover{opacity:1;filter:none}
+  .chip-toggle[data-locked]:hover .chip{background:color-mix(in srgb,currentColor 15%,transparent)}
+  .chip-toggle[data-locked]:active{transform:none}
+  .chip-toggle:focus-visible{outline:2px solid var(--water);outline-offset:3px;border-radius:9px}
+  @keyframes vz-nudge{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+  .chip-toggle.nudge{animation:vz-nudge .25s ease}
+  /* ocultar las capas no seleccionadas en todos los pasos */
+  html.off-water .L-water, html.off-quant .L-quant, html.off-steel .L-steel,
+  html.off-amber .L-amber, html.off-code .L-code{display:none}
 
   /* STEP */
   .step{margin-top:30px}
@@ -192,7 +221,7 @@
 
   @media (max-width:560px){
     .step-sub{display:none}
-    .chip{min-width:104px}
+    .chip{min-width:114px}
     .when{grid-template-columns:1fr}
     .gitem{grid-template-columns:1fr;gap:3px}
     .wrap{padding:40px 16px 60px}
@@ -302,7 +331,16 @@
     .viz-seen .bars rect:nth-child(7){ animation-delay:.22s }
   }
 </style>
-<script>document.documentElement.classList.add('js');</script>
+<script>
+(function(){
+  var d=document.documentElement; d.classList.add('js');
+  // aplica la profundidad guardada antes de pintar (sin parpadeo)
+  try{
+    var s=JSON.parse(localStorage.getItem('cuantica-niveles'));
+    if(s){ ['quant','steel','amber','code'].forEach(function(l){ if(s[l]===false) d.classList.add('off-'+l); }); }
+  }catch(e){}
+})();
+</script>
 </head>
 <body>
 <div class="wrap">
@@ -316,7 +354,7 @@
     <p>Un ordenador normal es una <b>persona que lo recorre a pie</b>, corredor a corredor. Un millón de caminos, un millón de intentos.</p>
     <p>Te habrán dicho que el cuántico “los recorre todos a la vez”. <span class="pop">Eso solo no sirve de nada</span>: aunque los recorras todos, sales por una puerta, y al azar es como tirar una moneda. Recorrerlo todo es el principio, no la magia.</p>
     <p>La magia: en vez de mandar a una persona, <b>tiras una piedra al agua</b>. Una ola entra por todos los corredores a la vez — y una ola tiene algo que una persona no: <b>crestas y valles que pueden cancelarse entre sí</b>. Todo lo que sigue ocurre en este mismo estanque.</p>
-    <p><b>Y algo clave antes de empezar:</b> no hay un laberinto universal. Cada problema que quieras resolver necesita <b>su propio laberinto, construido a medida</b> — lo que en la jerga se llama un <b>circuito</b>. Sus paredes se disponen <span class="pop">para que sea el propio movimiento del agua el que haga aflorar la solución</span>, sin que tú tengas que señalarla. Tú diseñas el laberinto; <b>el cálculo, en el fondo, lo hace la naturaleza</b> — tú solo le das la forma y te asomas a mirar.</p>
+    <p><b>Y algo clave antes de empezar:</b> no hay un laberinto universal. Cada problema que quieras resolver necesita <b>su propio laberinto, construido a medida</b> — lo que en la jerga se llama un <b>circuito</b>. Sus paredes se disponen <span class="pop">para que sea el propio movimiento del agua el que haga aflorar la solución</span>, sin que tú tengas que señalarla. Tú diseñas el laberinto; <b>el cálculo, en el fondo, lo hace la naturaleza</b>.</p>
   </div>
 
   <div class="realworld">
@@ -349,13 +387,39 @@
     <p class="later">Volvemos a ello al final, para ver por qué eso permite que la naturaleza calcule por nosotros.</p>
   </div>
 
-  <div class="legend">
-    <h2>Los 5 niveles de cada paso</h2>
-    <div class="row"><span class="chip c-water">Analogía</span><span>El laberinto inundado y sus olas. La intuición, siempre en el mismo mundo.</span></div>
-    <div class="row"><span class="chip c-quant">Estado cuántico</span><span>Qué le pasa de verdad al qubit: superposición, fase, amplitudes.</span></div>
-    <div class="row"><span class="chip c-steel">Máquina real</span><span>Qué hace el hardware: pulsos, microondas, láseres, frío extremo.</span></div>
-    <div class="row"><span class="chip c-amber">Matemática</span><span>La fórmula y, debajo, qué dice en cristiano.</span></div>
-    <div class="row"><span class="chip c-code">Código</span><span>El paso en Qiskit. Las 8 líneas, juntas, forman un programa que corre.</span></div>
+  <div class="legend" id="niveles">
+    <h2>¿Hasta dónde <em>te mojas</em>?</h2>
+    <p class="legend-hint">la analogía es la base · añade las capas que quieras</p>
+    <div class="row">
+      <button type="button" class="chip-toggle c-water" data-layer="water" data-locked aria-pressed="true" title="La analogía es la base: siempre visible">
+        <span class="chip">Analogía</span><span class="tier">dummies</span>
+      </button>
+      <span class="row-desc">El laberinto inundado y sus olas. La intuición, siempre en el mismo mundo.</span>
+    </div>
+    <div class="row">
+      <button type="button" class="chip-toggle c-quant" data-layer="quant" aria-pressed="true">
+        <span class="chip">Cuántica</span><span class="tier">frikis</span>
+      </button>
+      <span class="row-desc">Qué le pasa de verdad al qubit: superposición, fase, amplitudes.</span>
+    </div>
+    <div class="row">
+      <button type="button" class="chip-toggle c-steel" data-layer="steel" aria-pressed="true">
+        <span class="chip">Hardware</span><span class="tier">científicos</span>
+      </button>
+      <span class="row-desc">Qué hace el hardware: pulsos, microondas, láseres, frío extremo.</span>
+    </div>
+    <div class="row">
+      <button type="button" class="chip-toggle c-amber" data-layer="amber" aria-pressed="true">
+        <span class="chip">Matemática</span><span class="tier">nivel Einstein</span>
+      </button>
+      <span class="row-desc">La fórmula y, debajo, qué dice en cristiano.</span>
+    </div>
+    <div class="row">
+      <button type="button" class="chip-toggle c-code" data-layer="code" aria-pressed="true">
+        <span class="chip">Código</span><span class="tier">vivo en Matrix</span>
+      </button>
+      <span class="row-desc">El paso en Qiskit. Las 8 líneas, juntas, forman un programa que corre.</span>
+    </div>
   </div>
 
   <!-- STEP 1 -->
@@ -374,8 +438,8 @@
         </g>
       </svg><figcaption>agua en calma · todo en |0⟩</figcaption></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>El laberinto recién inundado, con el agua <b>perfectamente quieta</b> en la entrada. Las paredes —que <b>son el problema</b>— ya están puestas. Todo listo para tirar la piedra.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Todos los qubits se ponen en <span class="ket">|0⟩</span>: un estado nítido y definido, <b>sin superposición todavía</b>. El lienzo en blanco.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Se resetea el sistema a su mínima energía. En un chip <b>superconductor</b> se enfría a ~15 milikelvin (más frío que el espacio) y se deja relajar; con <b>iones atrapados</b>, un láser “bombea” cada átomo a un estado conocido.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Todos los qubits se ponen en <span class="ket">|0⟩</span>: un estado nítido y definido, <b>sin superposición todavía</b>. El lienzo en blanco.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>Se resetea el sistema a su mínima energía. En un chip <b>superconductor</b> se enfría a ~15 milikelvin (más frío que el espacio) y se deja relajar; con <b>iones atrapados</b>, un láser “bombea” cada átomo a un estado conocido.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">|ψ₀⟩ = |00…0⟩</p>
         <p class="gloss">Los símbolos <b>|&nbsp;⟩</b> son solo la notación para “estado” (se lee “ket”). Esto dice: <b>arrancamos con todos los qubits en 0</b>.</p>
@@ -424,8 +488,8 @@ qc = <span class="kw">QuantumCircuit</span>(2, 2)   <span class="cm"># 2 qubits 
         <text x="318" y="146" text-anchor="end" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">RUTAS = RESPUESTAS</text>
       </svg><figcaption>cada bifurcación es un qubit; el agua va por los dos lados → 2 qubits, 4 rutas (y n qubits, 2ⁿ)</figcaption></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>Tiras la piedra. Un solo frente de olas entra por <b>todos los corredores a la vez</b>; nadie elige camino, el agua lo llena todo sola. Conviene fijar aquí dos piezas: cada <b>bifurcación</b> del laberinto es un <b>qubit</b> (el agua puede ir por el 0 o por el 1), y un <b>corredor</b> entero —de la entrada a una salida— es una <b>ruta completa</b>: una respuesta. La piedra llena todas las rutas a la vez porque <b>en cada bifurcación el agua se reparte por los dos lados</b>.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Cada qubit deja de valer 0 <i>o</i> 1 y pasa a ser <b>una mezcla de ambos a la vez</b>. Con n qubits coexisten 2ⁿ combinaciones. La puerta <b>Hadamard</b> es la que crea esa mezcla.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Un pulso de microondas calibradísimo (un “medio giro”) golpea el qubit superconductor; o un pulso láser al ion. La <b>duración y la fase exactas</b> lo dejan a medio camino entre 0 y 1.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Cada qubit deja de valer 0 <i>o</i> 1 y pasa a ser <b>una mezcla de ambos a la vez</b>. Con n qubits coexisten 2ⁿ combinaciones. La puerta <b>Hadamard</b> es la que crea esa mezcla.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>Un pulso de microondas calibradísimo (un “medio giro”) golpea el qubit superconductor; o un pulso láser al ion. La <b>duración y la fase exactas</b> lo dejan a medio camino entre 0 y 1.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">H|0⟩ = (|0⟩ + |1⟩)/√2</p>
         <p class="gloss"><b>H</b> es la puerta Hadamard. Coge un 0 nítido y lo reparte en <b>mitad-0 y mitad-1 a la vez</b>. El <b>√2</b> es solo para que las dos probabilidades sigan sumando 1.</p>
@@ -449,8 +513,8 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
         <text x="180" y="110" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">DOS QUBITS, ATADOS</text>
       </svg><figcaption>dos bifurcaciones —dos qubits— que ya no se mueven por separado</figcaption></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>Hasta ahora cada bifurcación se movía <b>por su cuenta</b>. El entrelazamiento las <b>ata</b>: un enlace —como dos compuertas unidas por un mismo eje— acopla dos bifurcaciones, de modo que lo que el agua hace en una queda ligado a lo que hace en la otra. Ya no son olas sueltas: forman <b>un único oleaje coordinado</b> que <b>no puedes describir bifurcación por bifurcación</b>.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Dos o más qubits quedan <b>correlacionados</b>: ya no se puede describir cada uno por su cuenta. Medir uno te dice algo del otro al instante.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Se aplica una <b>puerta de dos qubits</b> (la CNOT). En superconductores se acoplan dos qubits vecinos vía un “acoplador”; en iones, se usa el <b>movimiento compartido</b> de los átomos en la trampa como bus de conexión.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Dos o más qubits quedan <b>correlacionados</b>: ya no se puede describir cada uno por su cuenta. Medir uno te dice algo del otro al instante.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>Se aplica una <b>puerta de dos qubits</b> (la CNOT). En superconductores se acoplan dos qubits vecinos vía un “acoplador”; en iones, se usa el <b>movimiento compartido</b> de los átomos en la trampa como bus de conexión.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">(|00⟩ + |11⟩)/√2&nbsp;&nbsp;≠&nbsp;&nbsp;|a⟩ ⊗ |b⟩</p>
         <p class="gloss">El par vale <b>00 o 11, nunca 01 ni 10</b>: están atados. El “≠” dice que ese estado <b>no se puede separar</b> en “qubit A por un lado, B por otro”. Eso <i>es</i> el entrelazamiento.</p>
@@ -476,8 +540,8 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
         <text x="174" y="14" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">TODOS IGUALES A SIMPLE VISTA</text>
       </svg><figcaption>uno es la salida — pero, aunque lo construiste tú, no sabes cuál</figcaption></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>De los mil corredores, <b>solo uno llega a la salida</b>; los demás mueren en un muro. Eso es lo que distingue al bueno, y <b>no lo decides tú</b>: tener el laberinto construido no es saber por dónde se sale. Por eso sueltas el agua — para que sea ella la que <b>dé con la salida</b>, recorriéndolos todos a la vez.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Se aplica el <b>oráculo</b>: una operación reversible que ejecuta la comprobación sobre <b>toda la superposición a la vez</b>. La función f se evalúa “para todos los caminos” en un solo paso.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>El oráculo no es una pieza mágica: se <b>compila</b> en una secuencia de las puertas de siempre (H, CNOT, rotaciones…) que juntas implementan la comprobación. Es un trocito de programa hecho de pulsos.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Se aplica el comprobador (en la jerga, el <b>oráculo</b>): una operación reversible que ejecuta la comprobación sobre <b>toda la superposición a la vez</b>. La función f se evalúa “para todos los caminos” en un solo paso.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>El oráculo no es una pieza mágica: se <b>compila</b> en una secuencia de las puertas de siempre (H, CNOT, rotaciones…) que juntas implementan la comprobación. Es un trocito de programa hecho de pulsos.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">U<sub>f</sub> |x⟩|y⟩ = |x⟩ |y ⊕ f(x)⟩</p>
         <p class="gloss"><b>U<sub>f</sub></b> es el comprobador. Deja intacta la entrada <b>x</b> y escribe el resultado de la comprobación <b>f(x)</b> en un qubit aparte. El <b>⊕</b> es XOR (sumar quedándote con par/impar), la forma estándar de hacerlo reversible.</p>
@@ -509,9 +573,9 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
         <text x="92" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#4cc9e8">ENTRA NORMAL</text>
         <text x="250" y="100" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">SALE DEL REVÉS</text>
       </svg><figcaption>la salida verdadera devuelve la ola del revés (marca invisible)</figcaption></figure>
-      <div class="layer L-water"><span class="lbl">Analogía</span><p>El laberinto, por su <b>propia forma</b>, hace que el agua que recorre la <b>salida verdadera</b> vuelva <b>del revés</b> (cresta por valle); la de los callejones vuelve igual. <b>Nadie marcó esa salida a mano</b> — es la estructura del laberinto la que reacciona sola al camino correcto. ¿Por qué del revés y no más alta? Porque una subida visible te chivaría la respuesta antes de tiempo; la vuelta es una marca <b>invisible</b> si miras la superficie ahora (una ola del revés ondula igual de fuerte)… pero decisiva para el choque que viene.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>En las ramas donde f(x)=1, el oráculo <b>estampa un signo menos</b> sobre la amplitud: un <b>cambio de fase</b>. Aún no cambia las probabilidades —solo el signo—. La información de f queda escrita <b>en las fases</b>.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Es un <b>desfase</b>: se retrasa media vuelta la oscilación cuántica de esa componente. Se consigue con <b>puertas de fase</b> (rotaciones Z) dentro del oráculo.</p></div>
+      <div class="layer L-water"><span class="lbl">Analogía</span><p>El laberinto, por su <b>propia forma</b>, hace que el agua que recorre la <b>salida verdadera</b> vuelva <b>del revés</b> (cresta por valle); la de los callejones vuelve igual. <b>Nadie marcó esa salida a mano</b> — es la estructura del laberinto la que reacciona sola al camino correcto. ¿Por qué del revés y no más alta? Porque lo que viene después es una <b>suma</b> de olas, y en una suma solo cuentan los signos: una ola invertida no se nota ahora —ondula igual de fuerte—, pero <b>resta</b> donde las demás suman. Una marca de altura se vería al instante y no podría cancelar nada en el choque que viene.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>En las ramas donde f(x)=1, el oráculo <b>estampa un signo menos</b> sobre la amplitud: un <b>cambio de fase</b>. Aún no cambia las probabilidades —solo el signo—. La información de f queda escrita <b>en las fases</b>.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>Es un <b>desfase</b>: se retrasa media vuelta la oscilación cuántica de esa componente. Se consigue con <b>puertas de fase</b> (rotaciones Z) dentro del oráculo.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">|x⟩ → (−1)<sup>f(x)</sup> |x⟩</p>
         <p class="gloss">Si la comprobación acierta (f=1), la onda de esa rama <b>se pone del revés</b> (signo −). Si falla (f=0), se queda igual (×1). <b>Solo cambia el signo</b>, todavía no la probabilidad.</p>
@@ -535,8 +599,8 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
         <text x="170" y="152" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">SOBREVIVE (SALIDA) · A COMPÁS → MAREJADA</text>
       </svg></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>Dejas que las olas invertidas y las normales <b>vuelvan a juntarse</b>. Donde cresta encuentra valle, se aplanan: <span class="neg">calma total en los callejones</span>. Donde van a compás, se montan: <span class="pos">marejada en el corredor que lleva a la salida</span>. <i>(Es justo lo que hacen tus auriculares con cancelación de ruido — también son olas, de sonido.)</i></p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Una última capa de Hadamard hace que las amplitudes con signo se sumen. Las incorrectas <span class="neg">se cancelan</span> (destructiva); la correcta <span class="pos">se amplifica</span> (constructiva). Y ese reparto no lo calculas tú número a número: <b>lo ejecuta la propia física al evolucionar el estado</b>. <b>Esto es lo único que un bit clásico no puede hacer.</b></p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Otra tanda de pulsos (las H finales) <b>recombina</b> las componentes. La cancelación es física y literal: dos oscilaciones desfasadas media vuelta se anulan al sumarse.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Una última capa de Hadamard —<b>la misma puerta que abrió el abanico al principio</b>, que ahora lo cierra— hace que las amplitudes con signo se sumen. Las incorrectas <span class="neg">se cancelan</span> (destructiva); la correcta <span class="pos">se amplifica</span> (constructiva). <b>Esto es lo único que un bit clásico no puede hacer</b>: un ordenador normal solo suma posibilidades <b>positivas</b> —solo puede repartir probabilidad, nunca cancelarla—. Aplanar un callejón exige que el número pueda ser <b>negativo</b>, y eso es lo que la onda trae gratis.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>Otra tanda de pulsos (las H finales) <b>recombina</b> las componentes. La cancelación es física y literal: dos oscilaciones desfasadas media vuelta se anulan al sumarse.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">amp(|0⟩) = ½·[ (−1)<sup>f(0)</sup> + (−1)<sup>f(1)</sup> ]</p>
         <p class="gloss">Se <b>suman las dos ramas</b>. Signos iguales → se refuerzan (<span class="pos">±1</span>). Signos opuestos → <span class="neg">se anulan (0)</span>. La interferencia, en una sola línea.</p>
@@ -567,8 +631,8 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard final → las ampl
         <text x="174" y="106" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#92a8c2">MIRAS UNA VEZ → 0/1</text>
       </svg><figcaption>calma en los falsos, marejada en el bueno</figcaption></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>Te asomas a la superficie, <b>una sola vez</b>. Calma en los callejones, marejada en el corredor bueno. Lees el que ruge.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Al medir, la superposición <b>colapsa a una sola</b> combinación clásica. Medir es como <b>tirar un dado</b> en el que cada salida es una cara, y lo pesada que es cada cara es su probabilidad: el <b>cuadrado de su amplitud</b> (regla de Born). La interferencia no quita el azar — <b>carga ese dado</b>: vuelve pesadísima la cara de la salida y casi ingrávidas las demás. Por eso casi siempre sale la buena.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>Se lee el estado físico: si un resonador acoplado cambia de frecuencia (superconductores) o si el átomo <b>emite luz</b> al iluminarlo con un láser (iones). Sale un bit clásico: 0 o 1.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Al medir, la superposición <b>colapsa a una sola</b> combinación clásica. Medir es como <b>tirar un dado</b> en el que cada salida es una cara, y lo pesada que es cada cara es su probabilidad: el <b>cuadrado de su amplitud</b> (regla de Born). La interferencia no quita el azar — <b>carga ese dado</b>: vuelve pesadísima la cara de la salida y casi ingrávidas las demás. Por eso casi siempre sale la buena.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>Se lee el estado físico: si un resonador acoplado cambia de frecuencia (superconductores) o si el átomo <b>emite luz</b> al iluminarlo con un láser (iones). Sale un bit clásico: 0 o 1.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">P(x) = |⟨x|ψ⟩|²</p>
         <p class="gloss">La probabilidad de leer un resultado es <b>el cuadrado de su amplitud</b> (regla de Born). Por eso amplitud nula = nunca sale; amplitud grande = casi siempre.</p>
@@ -598,8 +662,8 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard final → las ampl
         <text x="24" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#5d7593" transform="rotate(-90 24 58)">VECES</text>
       </svg><figcaption>miles de tiradas → un pico claro</figcaption></figure>
       <div class="layer L-water"><span class="lbl">Analogía</span><p>Como cada vistazo da una salida y queda algo de azar, <b>repites el experimento</b> del estanque varias veces y te quedas con la salida que más se repite.</p></div>
-      <div class="layer L-quant"><span class="lbl">Estado cuántico</span><p>Se prepara y mide el mismo circuito miles de veces. La <b>distribución de resultados</b> dibuja las probabilidades reales; el pico es tu respuesta.</p></div>
-      <div class="layer L-steel"><span class="lbl">Máquina real</span><p>El chip ejecuta el circuito entero una y otra vez (típico: <b>1.000–10.000 shots</b>) y un ordenador clásico cuenta frecuencias y devuelve un histograma.</p></div>
+      <div class="layer L-quant"><span class="lbl">Cuántica</span><p>Se prepara y mide el mismo circuito miles de veces. La <b>distribución de resultados</b> dibuja las probabilidades reales; el pico es tu respuesta.</p></div>
+      <div class="layer L-steel"><span class="lbl">Hardware</span><p>El chip ejecuta el circuito entero una y otra vez (típico: <b>1.000–10.000 shots</b>) y un ordenador clásico cuenta frecuencias y devuelve un histograma.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">P(x) ≈ (veces que sale x) / (total de shots)</p>
         <p class="gloss">Con muchas tiradas, <b>la frecuencia con que sale cada resultado</b> estima su probabilidad real. Más tiradas, mejor estimación.</p>
@@ -611,23 +675,6 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     </div>
   </section>
 
-  <!-- GLOSSARY -->
-  <dl class="glossary">
-    <h2>Glosario rápido</h2>
-    <p class="intro">los términos que aparecen, en una frase cada uno</p>
-    <div class="gitem" id="g-qubit"><dt>Qubit</dt><dd>La unidad cuántica de información. Como un bit, pero puede estar en <b>mezcla de 0 y 1</b> a la vez.</dd></div>
-    <div class="gitem" id="g-ket"><dt>|0⟩ , |1⟩</dt><dd>Notación “ket”: la forma estándar de escribir estados. <b>|0⟩</b> se lee “ket cero”.</dd></div>
-    <div class="gitem" id="g-amplitud"><dt>Amplitud</dt><dd>El número (con <b>signo y fase</b>) asociado a cada posibilidad. Su cuadrado es la probabilidad. Que pueda ser negativa es <b>toda la ventaja cuántica</b>.</dd></div>
-    <div class="gitem" id="g-puerta"><dt>Puerta (gate)</dt><dd>Operación elemental sobre qubits. El equivalente a las puertas lógicas clásicas, pero siempre <b>reversible</b> (una rotación).</dd></div>
-    <div class="gitem" id="g-hadamard"><dt>Hadamard (H)</dt><dd>La puerta que <b>crea superposición</b>: convierte un 0 nítido en mitad-0/mitad-1. Aparece al principio y al final.</dd></div>
-    <div class="gitem" id="g-cnot"><dt>CNOT</dt><dd>Puerta de dos qubits que <b>entrelaza</b>: hace que el estado de uno dependa del otro.</dd></div>
-    <div class="gitem" id="g-oraculo"><dt>Oráculo (U<sub>f</sub>)</dt><dd>El <b>comprobador</b> empaquetado como operación reversible. No contiene la respuesta, contiene cómo reconocerla.</dd></div>
-    <div class="gitem" id="g-fase"><dt>Fase / rotación Z</dt><dd>Girar la “onda” del qubit <b>sin cambiar su probabilidad</b>. Es donde vive la marca (el signo −).</dd></div>
-    <div class="gitem" id="g-bell"><dt>Estado de Bell</dt><dd>El ejemplo más simple de entrelazamiento: dos qubits que valen <b>00 o 11</b>, nunca mezclados.</dd></div>
-    <div class="gitem" id="g-born"><dt>Regla de Born</dt><dd>La ley que conecta el mundo cuántico con lo que ves: <b>probabilidad = |amplitud|²</b>.</dd></div>
-    <div class="gitem" id="g-shots"><dt>Shots</dt><dd>Número de veces que repites el circuito para sacar estadística. Más shots, resultado más fiable.</dd></div>
-  </dl>
-
   <!-- FAQ -->
   <section class="faq">
     <h2>Preguntas que quizá te queden</h2>
@@ -635,7 +682,7 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
 
     <div class="qa">
       <p class="q"><span>01</span>¿Por qué hay azar al repetir, si todo estaba tan calculado?</p>
-      <p class="a">Porque <b>mirar es un acto genuinamente aleatorio</b>: la cara que sale del dado la decide la naturaleza, pesada por las amplitudes. Y aquí está el detalle — la interferencia <b>casi nunca</b> deja los callejones en calma <i>perfecta</i>. La marejada de la salida es enorme, pero en <b>los callejones</b> queda un <b>chapoteo mínimo</b>, una probabilidad pequeña pero no nula. Así que casi siempre sale la buena… y de vez en cuando, una mala. Es un dado cargadísimo hacia el seis: caerá seis casi siempre, pero alguna vez no. Por eso repites: con mil tiradas, <span class="pop">el pico se ve clarísimo</span> y las malas aparecen una o dos veces. Repetir no corrige nada — <b>convierte “muy probable” en “prácticamente seguro”</b>.</p>
+      <p class="a">Porque <b>mirar es un acto genuinamente aleatorio</b>: la cara que sale del dado la decide la naturaleza, pesada por las amplitudes. Y aquí está el detalle — la interferencia <b>casi nunca</b> deja los callejones en calma <i>perfecta</i>. La marejada de la salida es enorme, pero en <b>los callejones</b> queda un <b>chapoteo mínimo</b>, una probabilidad pequeña pero no nula. Así que casi siempre sale la buena… y de vez en cuando, una mala. Por eso repites: con mil tiradas, <span class="pop">el pico se ve clarísimo</span> y las malas aparecen una o dos veces. Repetir no corrige nada — <b>convierte “muy probable” en “prácticamente seguro”</b>.</p>
     </div>
 
     <div class="qa">
@@ -646,6 +693,11 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     <div class="qa">
       <p class="q"><span>03</span>¿Y si hay varias salidas buenas?</p>
       <p class="a">Entonces la interferencia levanta <b>marejada en todas ellas</b> a la vez, y al repetir verás <b>varios picos</b> en lugar de uno. El dado queda cargado hacia ese grupo de caras. Algoritmos como el de Grover incluso ajustan cuántas “rondas de olas” hacen falta según cuántas respuestas buenas se esperan.</p>
+    </div>
+
+    <div class="qa">
+      <p class="q"><span>04</span>¿Cuánto más rápido es? ¿Encuentra la aguja de un vistazo?</p>
+      <p class="a">Depende del problema, y los tamaños son muy distintos. Buscar a ciegas —el caso que ilustra este laberinto— solo se acelera a la <b>raíz cuadrada</b>: de un millón de tiradas pasas a mil, no a una. Sigue siendo brutal, pero <b>no es instantáneo</b> (por eso hacen falta varias “rondas de olas”). Factorizar números enormes (el algoritmo de Shor) sí da un salto <b>exponencial</b>, de inviable a viable, pero por otra vía: aprovecha una <b>estructura periódica</b>, no el “comprobar fácil”. Y simular moléculas gana porque la naturaleza <b>ya es cuántica</b>. Por eso “difícil de resolver, fácil de comprobar” es una buena <span class="pop">intuición</span>, no una promesa de que reviente cualquier problema difícil: no se cree que resuelva de un plumazo los más duros (los <b>NP-completos</b>).</p>
     </div>
   </section>
 
@@ -662,7 +714,7 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
   <!-- CLOSE -->
   <div class="close">
     <h2>La única idea que hay que llevarse</h2>
-    <p><b>No das la respuesta: das el comprobador</b> — el laberinto construido a partir del problema, no de la solución. No sabes a qué corredor lleva la salida (construirlo no es resolverlo, igual que plantear un sudoku no es resolverlo). Sueltas la ola, y <span class="pop">la naturaleza, que lleva moviendo olas desde siempre, hace el trabajo por ti</span>: aplana los callejones y levanta marejada en la salida verdadera. Tú solo lo diseñas y te asomas al final.</p>
+    <p><b>No das la respuesta: das el comprobador</b> — el laberinto construido a partir del problema, no de la solución. No sabes a qué corredor lleva la salida (igual que plantear un sudoku no es resolverlo). Sueltas la ola, y <span class="pop">la naturaleza, que lleva moviendo olas desde siempre, hace el trabajo por ti</span>: aplana los callejones y levanta marejada en la salida verdadera. Tú solo lo diseñas y te asomas al final.</p>
     <p>Por eso <b>no es un ordenador más rápido para todo</b>. Solo gana en problemas difíciles de <b>resolver</b> pero fáciles de <b>comprobar</b>. Si reconocer la respuesta buena es tan lento como buscarla, no hay reconocedor que construir, y no hay ventaja.</p>
     <div class="when">
       <div class="yes"><div class="k">Donde sí brilla</div>Factorizar números enormes, buscar en el caos, simular moléculas, optimizar. <b>Aguja en un pajar gigante.</b></div>
@@ -676,12 +728,37 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     <p>Los ordenadores cuánticos de hoy son <b>los primeros</b>, y son toscos: pocos qubits, frágiles y llenos de ruido. Apenas aprovechan una <b>esquina diminuta</b> de lo que la mecánica cuántica ya permite, y solo conocemos un puñado de formas de usarla. Es razonable esperar máquinas <b>muy superiores</b> —más estables, con corrección de errores y con algoritmos que aún no se han inventado— capaces de exprimir <span class="eng">el motor del universo</span> mucho mejor. No para todo: seguirán brillando solo donde la interferencia ayuda. Pero en mucho más de lo que hoy imaginamos.</p>
   </div>
 
+  <!-- GLOSSARY (referencia, al final) -->
+  <dl class="glossary">
+    <h2>Glosario rápido</h2>
+    <p class="intro">los términos que aparecen, en una frase cada uno</p>
+    <div class="gitem" id="g-qubit"><dt>Qubit</dt><dd>La unidad cuántica de información. Como un bit, pero puede estar en <b>mezcla de 0 y 1</b> a la vez.</dd></div>
+    <div class="gitem" id="g-ket"><dt>|0⟩ , |1⟩</dt><dd>Notación “ket”: la forma estándar de escribir estados. <b>|0⟩</b> se lee “ket cero”.</dd></div>
+    <div class="gitem" id="g-amplitud"><dt>Amplitud</dt><dd>El número (con <b>signo y fase</b>) asociado a cada posibilidad. Su cuadrado es la probabilidad. Que pueda ser negativa es <b>toda la ventaja cuántica</b>. En general es un número complejo —un ángulo de fase continuo, no solo signo—; la instantánea de crestas y valles solo dibuja el caso ±, que es el que basta para este circuito.</dd></div>
+    <div class="gitem" id="g-superposicion"><dt>Superposición</dt><dd>Que un qubit sea <b>mezcla de 0 y 1 a la vez</b>, no uno u otro. Con n qubits coexisten <b>2ⁿ</b> combinaciones. Es la ola entrando por todos los corredores a la vez.</dd></div>
+    <div class="gitem" id="g-puerta"><dt>Puerta (gate)</dt><dd>Operación elemental sobre qubits. El equivalente a las puertas lógicas clásicas, pero siempre <b>reversible</b> (una rotación).</dd></div>
+    <div class="gitem" id="g-circuito"><dt>Circuito</dt><dd>La <b>secuencia de puertas</b> que resuelve un problema concreto: el laberinto construido a medida. No hay uno universal; <b>cada problema necesita el suyo</b>.</dd></div>
+    <div class="gitem" id="g-hadamard"><dt>Hadamard (H)</dt><dd>La puerta que <b>crea superposición</b>: convierte un 0 nítido en mitad-0/mitad-1. Aparece al principio y al final.</dd></div>
+    <div class="gitem" id="g-cnot"><dt>CNOT</dt><dd>Puerta de dos qubits que <b>entrelaza</b>: hace que el estado de uno dependa del otro.</dd></div>
+    <div class="gitem" id="g-entrelazamiento"><dt>Entrelazamiento</dt><dd>Dos o más qubits quedan <b>atados</b>: dejan de poder describirse por separado y medir uno condiciona al otro. Su ejemplo mínimo es el <b>estado de Bell</b>.</dd></div>
+    <div class="gitem" id="g-oraculo"><dt>Oráculo (U<sub>f</sub>)</dt><dd>El <b>comprobador</b> empaquetado como operación reversible. No contiene la respuesta, contiene cómo reconocerla.</dd></div>
+    <div class="gitem" id="g-fase"><dt>Fase / rotación Z</dt><dd>Girar la “onda” del qubit <b>sin cambiar su probabilidad</b>. Es donde vive la marca (el signo −).</dd></div>
+    <div class="gitem" id="g-interferencia"><dt>Interferencia</dt><dd>La suma de amplitudes con signo: las iguales <b>se refuerzan</b> (constructiva) y las opuestas <b>se cancelan</b> (destructiva). Es el truco que aplana los callejones y levanta la salida.</dd></div>
+    <div class="gitem" id="g-bloch"><dt>Esfera de Bloch</dt><dd>Otra forma habitual de dibujar <b>un</b> qubit: un punto en una esfera (polos = |0⟩ y |1⟩, ecuador = superposiciones, la vuelta al ecuador = la fase). Útil para un qubit suelto; aquí preferimos la ola porque lo que cuenta es cómo se suman <b>muchos</b> caminos.</dd></div>
+    <div class="gitem" id="g-bell"><dt>Estado de Bell</dt><dd>El ejemplo más simple de entrelazamiento: dos qubits que valen <b>00 o 11</b>, nunca mezclados.</dd></div>
+    <div class="gitem" id="g-born"><dt>Regla de Born</dt><dd>La ley que conecta el mundo cuántico con lo que ves: <b>probabilidad = |amplitud|²</b>.</dd></div>
+    <div class="gitem" id="g-colapso"><dt>Colapso</dt><dd>Al <b>medir</b>, la superposición se reduce de golpe a <b>una sola</b> combinación clásica (0 o 1). Es lo que ves; el azar de cuál sale lo pesa la <b>regla de Born</b>.</dd></div>
+    <div class="gitem" id="g-decoherencia"><dt>Decoherencia</dt><dd>Que el estado cuántico <b>se estropee</b> antes de tiempo por el ruido del entorno. El gran enemigo del hardware; se combate con <b>corrección de errores</b>.</dd></div>
+    <div class="gitem" id="g-shots"><dt>Shots</dt><dd>Número de veces que repites el circuito para sacar estadística. Más shots, resultado más fiable.</dd></div>
+    <div class="gitem" id="g-qiskit"><dt>Qiskit</dt><dd>La <b>librería de Python</b> (de IBM) para escribir circuitos cuánticos y ejecutarlos en un simulador o en un ordenador cuántico real. Es el lenguaje de las <b>8 líneas de código</b>.</dd></div>
+  </dl>
+
   <p class="foot">superposición → marca → interferencia → medida · el resto es ingeniería</p>
 
   <div class="credits">
-    <span class="v">v0.1</span>
+    <span class="v">v0.2</span>
     <span>·</span>
-    <span>29 jun 2026</span>
+    <span>30 jun 2026</span>
     <span>·</span>
     <a href="https://github.com/roberodin" target="_blank" rel="noopener">@roberodin</a>
   </div>
@@ -699,7 +776,14 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     {re:/\bqubits?\b/i,        id:'g-qubit'},
     {re:/\bpuertas?\b/i,       id:'g-puerta'},
     {re:/\bfase\b/i,           id:'g-fase'},
-    {re:/\bshots?\b/i,         id:'g-shots'}
+    {re:/\bshots?\b/i,         id:'g-shots'},
+    {re:/\bsuperposici[oó]n\b/i, id:'g-superposicion'},
+    {re:/\bentrelazamiento\b/i,  id:'g-entrelazamiento'},
+    {re:/\binterferencia\b/i,    id:'g-interferencia'},
+    {re:/\bdecoherencia\b/i,     id:'g-decoherencia'},
+    {re:/\bQiskit\b/i,           id:'g-qiskit'},
+    {re:/\bcircuitos?\b/i,       id:'g-circuito'},
+    {re:/\bcolaps\w*\b/i,        id:'g-colapso'}
   ];
   var EXCL = 'pre,code,.glossary,.formula,h1,h2,h3,a,.gt,.lbl,.chip,.step-num,figcaption,.eyebrow,.eyebrow2,.eyebrow3,.step-sub';
   var root = document.querySelector('.wrap');
@@ -766,6 +850,30 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     });
   }, {threshold:0.2, rootMargin:'0px 0px -6% 0px'});
   document.querySelectorAll('.diagram svg').forEach(function(s){ io.observe(s); });
+})();
+</script>
+<script>
+/* Selector de profundidad: marca qué capas ver (mínimo 1), recordado entre visitas. */
+(function(){
+  var KEY='cuantica-niveles', LAYERS=['quant','steel','amber','code'];
+  var d=document.documentElement;
+  d.classList.remove('off-water');             // la analogía es la base: siempre visible
+  function save(){
+    var s={water:true};
+    LAYERS.forEach(function(l){ s[l]=!d.classList.contains('off-'+l); });
+    try{ localStorage.setItem(KEY, JSON.stringify(s)); }catch(e){}
+  }
+  document.querySelectorAll('.chip-toggle').forEach(function(b){
+    if(b.hasAttribute('data-locked')){ b.setAttribute('aria-pressed','true'); return; }
+    var l=b.getAttribute('data-layer');
+    // sincroniza el botón con el estado ya aplicado en <html> por el script de cabecera
+    b.setAttribute('aria-pressed', d.classList.contains('off-'+l) ? 'false' : 'true');
+    b.addEventListener('click', function(){
+      d.classList.toggle('off-'+l);
+      b.setAttribute('aria-pressed', d.classList.contains('off-'+l) ? 'false' : 'true');
+      save();
+    });
+  });
 })();
 </script>
 </body>
