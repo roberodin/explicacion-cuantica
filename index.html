@@ -242,6 +242,9 @@
   .close h2{font-family:"Space Grotesk",sans-serif;font-size:22px;margin:0 0 12px;letter-spacing:-.01em}
   .close p{color:var(--mut);font-size:15px;margin:0 0 14px}
   .close p b{color:var(--ink)} .close p .pop{color:var(--amber);font-weight:600}
+  .close .more{display:block;margin-top:10px;font-size:13px;color:var(--mut)}
+  .close .more a{color:var(--water);text-decoration:none;border-bottom:1px solid rgba(76,201,232,.45)}
+  .close .more a:hover{border-bottom-color:var(--water)}
   .when{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
   .when div{border:1px solid var(--line);border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--mut)}
   .when .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
@@ -725,9 +728,9 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
 
   <!-- CLOSE -->
   <div class="close">
-    <h2>La única idea que hay que llevarse</h2>
+    <h2>Lo esencial del laberinto</h2>
     <p><span class="pop">No das la respuesta: das el comprobador</span> — el laberinto construido a partir del problema, no de la solución. No sabes a qué pasillo lleva la salida (igual que plantear un sudoku no es resolverlo). Sueltas la ola, y <span class="pop">la naturaleza, que lleva moviendo olas desde siempre, hace el trabajo por ti</span>: aplana los callejones y levanta marejada en la salida verdadera. Tú solo lo diseñas y te asomas al final.</p>
-    <p><b>No es un ordenador más rápido para todo</b>. Es una máquina para problemas difíciles de <b>resolver</b> pero fáciles de <b>comprobar</b>: le das la forma de reconocer la respuesta, y <b>la naturaleza la encuentra sola</b>.</p>
+    <p><b>No es un ordenador más rápido para todo</b>. Es una máquina para problemas difíciles de <b>resolver</b> pero fáciles de <b>comprobar</b>: le das la forma de reconocer la respuesta, y <b>la naturaleza la encuentra sola</b>. <span class="more">(este laberinto usa el algoritmo de <b>Grover</b>; hay más — <a href="#algoritmos">ver Algoritmos</a>)</span></p>
     <div class="when">
       <div class="yes"><div class="k">Donde sí brilla</div>Factorizar números enormes, buscar en el caos, simular moléculas, optimizar. <b>Aguja en un pajar gigante.</b></div>
       <div class="no"><div class="k">Donde no aporta</div>Casi todo el día a día de tu portátil: navegar, escribir, vídeo, hojas de cálculo. <b>No hay nada que cancelar.</b></div>
@@ -816,7 +819,7 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
   </div>
 
   <!-- FAMILIAS DE ALGORITMOS -->
-  <section class="algos">
+  <section class="algos" id="algoritmos">
     <h2>¿Qué algoritmos cuánticos hay?</h2>
     <p class="lead">Pocos, en realidad. Casi todos usan el mismo motor —la <b>interferencia</b>— de tres formas distintas. (Por eso lo de la "esquina diminuta".)</p>
     <figure class="diagram"><svg viewBox="0 0 340 124" role="img" aria-label="Las tres formas de usar la interferencia: buscar a ciegas (Grover), descubrir un ritmo oculto (Shor) e imitar una molécula (Feynman).">
