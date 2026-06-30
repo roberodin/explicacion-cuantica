@@ -234,6 +234,7 @@
   .close p b{color:var(--ink)} .close p .pop{color:var(--amber);font-weight:600}
   .verdict{font-family:"IBM Plex Mono",monospace;font-size:13.5px;line-height:1.7;color:#ffe3b0;
     border-left:3px solid var(--amber);padding:4px 0 4px 16px;margin:18px 0 0}
+  .close .verdict{margin-top:22px}
   .when{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
   .when div{border:1px solid var(--line);border-radius:11px;padding:13px 15px;font-size:13.5px;color:var(--mut)}
   .when .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:6px;font-weight:600}
@@ -570,7 +571,8 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
         <p class="formula">U<sub>f</sub> |x⟩|y⟩ = |x⟩ |y ⊕ f(x)⟩</p>
         <p class="gloss"><b>U<sub>f</sub></b> es el comprobador. Deja intacta la entrada <b>x</b> y escribe el resultado de la comprobación <b>f(x)</b> en un qubit aparte. El <b>⊕</b> es XOR (sumar quedándote con par/impar), la forma estándar de hacerlo reversible.</p>
       </div>
-      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">compose</span>(oraculo, inplace=True)
+      <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>oraculo = <span class="kw">QuantumCircuit</span>(2)
+qc.<span class="kw">compose</span>(oraculo, inplace=True)
 <span class="cm"># 'oraculo' es el subcircuito que reconoce la solución</span></pre></div>
     </div>
   </section>
@@ -699,6 +701,29 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     </div>
   </section>
 
+  <!-- CLOSE -->
+  <div class="close">
+    <h2>La única idea que hay que llevarse</h2>
+    <p><span class="pop">No das la respuesta: das el comprobador</span> — el laberinto construido a partir del problema, no de la solución. No sabes a qué corredor lleva la salida (igual que plantear un sudoku no es resolverlo). Sueltas la ola, y <span class="pop">la naturaleza, que lleva moviendo olas desde siempre, hace el trabajo por ti</span>: aplana los callejones y levanta marejada en la salida verdadera. Tú solo lo diseñas y te asomas al final.</p>
+    <p><b>No es un ordenador más rápido para todo</b>. Es una máquina para problemas difíciles de <b>resolver</b> pero fáciles de <b>comprobar</b>: le das la forma de reconocer la respuesta, y <b>la naturaleza la encuentra sola</b>.</p>
+    <div class="when">
+      <div class="yes"><div class="k">Donde sí brilla</div>Factorizar números enormes, buscar en el caos, simular moléculas, optimizar. <b>Aguja en un pajar gigante.</b></div>
+      <div class="no"><div class="k">Donde no aporta</div>Casi todo el día a día de tu portátil: navegar, escribir, vídeo, hojas de cálculo. <b>No hay nada que cancelar.</b></div>
+    </div>
+    <p class="verdict">Con un matiz honesto: <b>buscar en el caos</b> es el caso puro de “reconocer la respuesta”. <b>Factorizar</b> y <b>simular moléculas</b> ganan por rutas primas —aprovechar una estructura oculta, o que la naturaleza ya es cuántica—, pero el motor de fondo es <b>siempre el mismo: la interferencia</b>.</p>
+  </div>
+
+  <!-- WHY -->
+  <section class="why">
+    <h2>Por qué la naturaleza puede calcular por nosotros</h2>
+    <p>Vuelve a la doble rendija. Un fotón no <b>elige</b> una rendija: las cruza <b>las dos a la vez</b>, y los dos caminos chocan — se suman donde coinciden, <span class="pop2">se cancelan</span> donde van en contrafase. Eso es, en pequeño, todo lo que hace un ordenador cuántico.</p>
+    <p>La clave está ahí: <b>una onda lleva todas las posibilidades a la vez</b>, cada una con su amplitud. Eso es la superposición. Y como las amplitudes tienen fase, <b>se suman y se restan solas</b>. La naturaleza ya hace esto en cada partícula, <span class="pop2">gratis</span>, porque es lo que es — no lo calculamos nosotros número a número.</p>
+    <p>Y no es un truco de laboratorio: es <b>cómo se mueve todo</b>. Una piedra al caer, o la luz buscando su camino, no <b>eligen</b> la ruta óptima — la naturaleza las <b>prueba todas a la vez</b> y la interferencia cancela las demás, dejando solo la mejor. Eso que en física se llama <span class="pop">principio de mínima acción</span> (“la naturaleza siempre toma el mejor camino”) es, por debajo, <span class="pop2">esta misma interferencia</span>. No optimiza porque quiera: <b>el mejor camino es, sencillamente, el único que no se cancela.</b></p>
+    <p>Por eso un fotón puede “ayudarnos”. Un ordenador cuántico es una <b>doble rendija gigante</b>, con millones de caminos, donde colocamos las rendijas —el circuito— para que la franja brillante caiga sobre la respuesta. <b>Nosotros montamos el escenario; la interferencia la pone la física.</b></p>
+    <p>Y conviene ser honestos: <b>nadie sabe <i>por qué</i></b> la realidad es así. Tenemos las matemáticas, que aciertan con una precisión perfecta, pero por qué el universo funciona con amplitudes que se cancelan sigue siendo un misterio sin resolver, sin acuerdo entre los físicos. Como dijo Feynman, “nadie entiende la mecánica cuántica”. <b>No hace falta entender el porqué para usarla</b>: funciona, y con eso basta.</p>
+    <p class="kicker">Nosotros solo elegimos qué debe sobrevivir al choque.<br>El choque —el cálculo— lo hace la naturaleza.</p>
+  </section>
+
   <!-- FAQ -->
   <section class="faq">
     <h2>Preguntas que quizá te queden</h2>
@@ -724,29 +749,6 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
       <p class="a">Entonces la interferencia levanta <b>marejada en todas ellas</b> a la vez, y al repetir verás <b>varios picos</b> en lugar de uno. El dado queda cargado hacia ese grupo de caras. Algoritmos como el de Grover incluso ajustan cuántas “rondas de olas” hacen falta según cuántas respuestas buenas se esperan.</p>
     </div>
   </section>
-
-  <!-- WHY -->
-  <section class="why">
-    <h2>Por qué la naturaleza puede calcular por nosotros</h2>
-    <p>Vuelve a la doble rendija. Un fotón no <b>elige</b> una rendija: las cruza <b>las dos a la vez</b>, y los dos caminos chocan — se suman donde coinciden, <span class="pop2">se cancelan</span> donde van en contrafase. Eso es, en pequeño, todo lo que hace un ordenador cuántico.</p>
-    <p>La clave está ahí: <b>una onda lleva todas las posibilidades a la vez</b>, cada una con su amplitud. Eso es la superposición. Y como las amplitudes tienen fase, <b>se suman y se restan solas</b>. La naturaleza ya hace esto en cada partícula, <span class="pop2">gratis</span>, porque es lo que es — no lo calculamos nosotros número a número.</p>
-    <p>Y no es un truco de laboratorio: es <b>cómo se mueve todo</b>. Una piedra al caer, o la luz buscando su camino, no <b>eligen</b> la ruta óptima — la naturaleza las <b>prueba todas a la vez</b> y la interferencia cancela las demás, dejando solo la mejor. Eso que en física se llama <span class="pop">principio de mínima acción</span> (“la naturaleza siempre toma el mejor camino”) es, por debajo, <span class="pop2">esta misma interferencia</span>. No optimiza porque quiera: <b>el mejor camino es, sencillamente, el único que no se cancela.</b></p>
-    <p>Por eso un fotón puede “ayudarnos”. Un ordenador cuántico es una <b>doble rendija gigante</b>, con millones de caminos, donde colocamos las rendijas —el circuito— para que la franja brillante caiga sobre la respuesta. <b>Nosotros montamos el escenario; la interferencia la pone la física.</b></p>
-    <p>Y conviene ser honestos: <b>nadie sabe <i>por qué</i></b> la realidad es así. Tenemos las matemáticas, que aciertan con una precisión perfecta, pero por qué el universo funciona con amplitudes que se cancelan sigue siendo un misterio sin resolver, sin acuerdo entre los físicos. Como dijo Feynman, “nadie entiende la mecánica cuántica”. <b>No hace falta entender el porqué para usarla</b>: funciona, y con eso basta.</p>
-    <p class="kicker">Nosotros solo elegimos qué debe sobrevivir al choque.<br>El choque —el cálculo— lo hace la naturaleza.</p>
-  </section>
-
-  <!-- CLOSE -->
-  <div class="close">
-    <h2>La única idea que hay que llevarse</h2>
-    <p><span class="pop">No das la respuesta: das el comprobador</span> — el laberinto construido a partir del problema, no de la solución. No sabes a qué corredor lleva la salida (igual que plantear un sudoku no es resolverlo). Sueltas la ola, y <span class="pop">la naturaleza, que lleva moviendo olas desde siempre, hace el trabajo por ti</span>: aplana los callejones y levanta marejada en la salida verdadera. Tú solo lo diseñas y te asomas al final.</p>
-    <p>Por eso <b>no es un ordenador más rápido para todo</b>. Solo gana en problemas difíciles de <b>resolver</b> pero fáciles de <b>comprobar</b>. Si reconocer la respuesta buena es tan lento como buscarla, no hay reconocedor que construir, y no hay ventaja.</p>
-    <div class="when">
-      <div class="yes"><div class="k">Donde sí brilla</div>Factorizar números enormes, buscar en el caos, simular moléculas, optimizar. <b>Aguja en un pajar gigante.</b></div>
-      <div class="no"><div class="k">Donde no aporta</div>Casi todo el día a día de tu portátil: navegar, escribir, vídeo, hojas de cálculo. <b>No hay nada que cancelar.</b></div>
-    </div>
-    <p class="verdict">No es un ordenador más rápido para todo.<br>Es una máquina para problemas difíciles de resolver pero fáciles de comprobar:<br>le das la forma de reconocer la respuesta, y la naturaleza la encuentra sola.</p>
-  </div>
 
   <div class="coda">
     <h3>Y esto es apenas el principio</h3>
@@ -813,7 +815,7 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
   <p class="foot">superposición → marca → interferencia → medida · el resto es ingeniería</p>
 
   <div class="credits">
-    <span class="v">v0.3</span>
+    <span class="v">v0.4</span>
     <span>·</span>
     <span>29 jun 2026</span>
     <span>·</span>
