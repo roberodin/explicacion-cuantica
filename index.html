@@ -60,6 +60,16 @@
   .setup b{color:var(--ink);font-weight:600}
   .setup .pop{color:var(--amber);font-weight:600}
 
+  /* PRIMER · intro sencilla */
+  .primer{margin:26px 0 8px;border:1px solid rgba(76,201,232,.28);border-radius:14px;
+    background:radial-gradient(640px 230px at 85% 0%,rgba(76,201,232,.09),transparent 70%),var(--card);padding:20px 22px}
+  .primer h2{font-family:"Space Grotesk",sans-serif;font-size:clamp(18px,3.4vw,21px);letter-spacing:-.01em;color:var(--ink);margin:0 0 12px;font-weight:600}
+  .primer p{color:var(--mut);font-size:15.5px;line-height:1.6;margin:0 0 11px}
+  .primer p:last-child{margin:0}
+  .primer p b{color:var(--ink);font-weight:600}
+  .primer .pop{color:var(--amber);font-weight:600}
+  .primer .tail{font-size:13.5px;color:var(--faint);font-style:italic}
+
   /* LEGEND */
   .legend{margin:30px 0 8px;border:1px solid var(--line);border-radius:14px;background:var(--card);padding:18px 20px}
   .legend h2{font-family:"Space Grotesk",sans-serif;font-size:clamp(19px,3.6vw,22px);letter-spacing:-.01em;
@@ -375,9 +385,17 @@
   <h1>La explicación <em>definitiva</em> del ordenador cuántico</h1>
   <p class="lede">Un mismo recorrido contado en <b>cinco alturas de zoom</b>, todo dentro de un solo mundo: <b>un laberinto inundado</b>. Empieza por el agua; baja a las matemáticas o al código solo si te apetece. Las cinco son el mismo paso, a distinta altura.</p>
 
+  <div class="primer">
+    <h2>La idea, en un minuto</h2>
+    <p>Tienes un <b>laberinto</b> enorme: miles de pasillos y <b>una sola salida de verdad</b>.</p>
+    <p>Un <b>ordenador normal</b> lo recorre <b>a pie, pasillo por pasillo</b>, a prueba y error. Un millón de pasillos, un millón de intentos.</p>
+    <p>Un <b>ordenador cuántico</b> no lo recorre: lo <b>inunda de agua</b>. El agua entra por todo el laberinto a la vez y, obedeciendo las leyes de la física, <b>hace que la salida aflore sola</b> — tú solo miras por dónde sale con fuerza.</p>
+    <p>Lo asombroso: <span class="pop">el cálculo no lo haces tú, lo hace la naturaleza</span>. Tú construyes el laberinto (planteas el problema); el agua —la física— lo resuelve.</p>
+    <p>Y no hay una sola forma de mover el agua: la naturaleza tiene <b>muchas leyes</b>, y cada problema se resuelve mejor de una manera. Tú eliges el laberinto; <b>ella decide cómo encontrar la salida</b>.</p>
+    <p class="tail">El resto del documento baja al detalle: por qué el agua “sabe” salir, qué le pasa a cada qubit y cómo se escribe en ocho líneas de código.</p>
+  </div>
+
   <div class="setup">
-    <p>Imagina un <b>laberinto inundado</b>: corredores llenos de agua, miles de ellos, y <b>solo uno es la salida de verdad</b>; el resto son callejones sin salida.</p>
-    <p>Un ordenador normal es una <b>persona que lo recorre a pie</b>, corredor a corredor. Un millón de caminos, un millón de intentos.</p>
     <p>Te habrán dicho que el cuántico “los recorre todos a la vez”. <span class="pop">Eso solo no sirve de nada</span>: aunque los recorras todos, sales por una puerta, y al azar es como tirar una moneda. Recorrerlo todo es el principio, no la magia.</p>
     <p>La magia: en vez de mandar a una persona, <b>tiras una piedra al agua</b>. Una ola entra por todos los corredores a la vez — y una ola tiene algo que una persona no: <b>crestas y valles que pueden cancelarse entre sí</b>. Todo lo que sigue ocurre en este mismo estanque.</p>
     <p><b>Y algo clave antes de empezar:</b> no hay un laberinto universal. Cada problema que quieras resolver necesita <b>su propio laberinto, construido a medida</b> — lo que en la jerga se llama un <b>circuito</b>. Sus paredes se disponen <span class="pop">para que sea el propio movimiento del agua el que haga aflorar la solución</span>, sin que tú tengas que señalarla. Tú diseñas el laberinto; <b>el cálculo, en el fondo, lo hace la naturaleza</b>.</p>
@@ -815,7 +833,7 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
   <p class="foot">superposición → marca → interferencia → medida · el resto es ingeniería</p>
 
   <div class="credits">
-    <span class="v">v0.4</span>
+    <span class="v">v0.5</span>
     <span>·</span>
     <span>28 jun 2026</span>
     <span>·</span>
