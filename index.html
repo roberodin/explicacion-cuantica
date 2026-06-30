@@ -292,7 +292,8 @@
 
     /* piezas que se transforman: origen relativo a su propia caja */
     .emit-src,.emit-slit,.splash,.stone,.src-dot,.forks circle,.ident-wave,
-    .probe-arrow,.ent-wave,.wave-anti,.wave-survive,.meas-surge,.bars rect{
+    .probe-arrow,.ent-wave,.wave-anti,.wave-survive,.meas-surge,.bars rect,
+    .maze-water,.maze-surge,.walk-dot,.ico-pulse,.ico-wave,.ec-dot{
       transform-box:fill-box;
     }
 
@@ -307,7 +308,7 @@
     @keyframes vz-arrow{ 0%,100%{transform:translateX(0);opacity:.55} 50%{transform:translateX(-3px);opacity:1} }
     @keyframes vz-axis{ 0%,100%{opacity:.45} 30%,42%{opacity:1} }
     @keyframes vz-markin{ 0%{stroke-dashoffset:var(--len);opacity:1} 28%{stroke-dashoffset:0} 58%{stroke-dashoffset:0;opacity:1} 74%{opacity:0} 100%{stroke-dashoffset:0;opacity:0} }
-    @keyframes vz-markout{ 0%{stroke-dashoffset:var(--len);opacity:0} 30%{opacity:0} 34%{opacity:1} 62%{stroke-dashoffset:0;opacity:1} 84%{stroke-dashoffset:0;opacity:1} 96%{opacity:0} 100%{stroke-dashoffset:0;opacity:0} }
+    @keyframes vz-markout{ 0%{stroke-dashoffset:var(--len);opacity:0} 30%{stroke-dashoffset:var(--len);opacity:0} 34%{stroke-dashoffset:var(--len);opacity:1} 62%{stroke-dashoffset:0;opacity:1} 84%{stroke-dashoffset:0;opacity:1} 96%{opacity:0} 100%{stroke-dashoffset:0;opacity:0} }
     @keyframes vz-cancel{ 0%,26%{transform:scaleY(1)} 56%,80%{transform:scaleY(.05)} 100%{transform:scaleY(1)} }
     @keyframes vz-survive{ 0%,100%{transform:scaleY(.5);opacity:.6} 55%{transform:scaleY(1.2);opacity:1} }
     @keyframes vz-surge{ 0%,100%{transform:scaleY(.62)} 50%{transform:scaleY(1.12)} }
@@ -365,6 +366,20 @@
     .viz-seen .bars rect:nth-child(5){ animation-delay:.42s }
     .viz-seen .bars rect:nth-child(6){ animation-delay:.32s }
     .viz-seen .bars rect:nth-child(7){ animation-delay:.22s }
+
+    /* ── intro · laberinto inundado (clásico vs cuántico) ── */
+    .viz-in .walk-dot{ transform-origin:center; animation:vz-dot 2.6s var(--vez) infinite }
+    .viz-in .maze-water{ transform-origin:center; animation:vz-sway 4s ease-in-out infinite }
+    .viz-in .maze-surge{ transform-origin:center bottom; animation:vz-surge 2.2s var(--vez) infinite }
+
+    /* ── algoritmos · tres formas de mover el agua ── */
+    .viz-in .ico-pulse{ transform-origin:center; animation:vz-dot 2.8s var(--vez) infinite }
+    .viz-in .ico-wave{ transform-origin:center; animation:vz-sway 3.4s ease-in-out infinite }
+    .viz-in .ico-link{ animation:vz-link 2.8s var(--vez) infinite }
+
+    /* ── FAQ · corrección de errores (síntoma, no dato) ── */
+    .viz-in .ec-dot{ transform-origin:center; animation:vz-dot 2.8s var(--vez) infinite }
+    .viz-in .ec-link{ animation:vz-link 2.2s var(--vez) infinite }
   }
 </style>
 <script>
@@ -390,6 +405,34 @@
     <p>Tienes un <b>laberinto</b> enorme: miles de pasillos y <b>una sola salida de verdad</b>; los demás son <b>callejones sin salida</b>.</p>
     <p>Un <b>ordenador normal</b> lo recorre <b>a pie, pasillo a pasillo</b>, a prueba y error. Un millón de pasillos, un millón de intentos.</p>
     <p>Un <b>ordenador cuántico</b> no lo recorre: lo <b>inunda de agua</b>. El agua entra por todo el laberinto a la vez y, obedeciendo las leyes de la física, <b>hace que la salida aflore sola</b> gracias a las olas que forma — tú solo miras por dónde sale.</p>
+    <figure class="diagram"><svg viewBox="0 0 340 150" role="img" aria-label="Dos laberintos lado a lado. A la izquierda, 'a pie': un punto recorre un solo pasillo a prueba y error. A la derecha, 'inundado': el agua llena todos los pasillos a la vez y la salida verdadera rebosa en ámbar.">
+      <!-- muros de los dos laberintos -->
+      <g stroke="#8fa6bf" stroke-width="2" stroke-linecap="round">
+        <line x1="16" y1="40" x2="16" y2="120"/><line x1="42" y1="40" x2="42" y2="120"/><line x1="68" y1="40" x2="68" y2="120"/><line x1="94" y1="40" x2="94" y2="120"/><line x1="120" y1="40" x2="120" y2="120"/><line x1="146" y1="40" x2="146" y2="120"/>
+        <line x1="16" y1="40" x2="42" y2="40"/><line x1="42" y1="40" x2="68" y2="40"/><line x1="68" y1="40" x2="94" y2="40"/><line x1="120" y1="40" x2="146" y2="40"/>
+        <line x1="16" y1="120" x2="146" y2="120"/>
+        <line x1="194" y1="40" x2="194" y2="120"/><line x1="220" y1="40" x2="220" y2="120"/><line x1="246" y1="40" x2="246" y2="120"/><line x1="272" y1="40" x2="272" y2="120"/><line x1="298" y1="40" x2="298" y2="120"/><line x1="324" y1="40" x2="324" y2="120"/>
+        <line x1="194" y1="40" x2="220" y2="40"/><line x1="220" y1="40" x2="246" y2="40"/><line x1="246" y1="40" x2="272" y2="40"/><line x1="298" y1="40" x2="324" y2="40"/>
+        <line x1="194" y1="120" x2="324" y2="120"/>
+      </g>
+      <!-- izquierda: caminante probando un pasillo -->
+      <line x1="55" y1="114" x2="55" y2="80" stroke="#8fa6bf" stroke-width="1.5" stroke-dasharray="3 3"/>
+      <polygon points="55,72 50,82 60,82" fill="#8fa6bf"/>
+      <circle class="walk-dot" cx="55" cy="113" r="3" fill="#8fa6bf"/>
+      <!-- derecha: agua en los callejones -->
+      <g fill="#4cc9e8" opacity=".16"><rect x="195" y="72" width="24" height="46"/><rect x="221" y="72" width="24" height="46"/><rect x="247" y="72" width="24" height="46"/><rect x="299" y="72" width="24" height="46"/></g>
+      <g class="maze-water" fill="none" stroke="#4cc9e8" stroke-width="1.6" opacity=".75">
+        <path d="M196 72 q 6.5 -4 13 0 t 13 0"/><path d="M222 72 q 6.5 -4 13 0 t 13 0"/><path d="M248 72 q 6.5 -4 13 0 t 13 0"/><path d="M300 72 q 6.5 -4 13 0 t 13 0"/>
+      </g>
+      <!-- derecha: la salida verdadera rebosa -->
+      <rect x="273" y="54" width="24" height="64" fill="#f6a93b" opacity=".85"/>
+      <g class="maze-surge" stroke="#f6a93b" fill="none" stroke-width="2" stroke-linecap="round">
+        <path d="M275 40 Q285 22 295 40"/><line x1="285" y1="40" x2="285" y2="22"/><line x1="278" y1="36" x2="273" y2="27"/><line x1="292" y1="36" x2="297" y2="27"/>
+      </g>
+      <text x="285" y="15" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#f6a93b">SALIDA</text>
+      <text x="81" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#8fa6bf">A PIE</text>
+      <text x="259" y="142" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="#4cc9e8">INUNDADO</text>
+    </svg><figcaption>el ordenador normal prueba <span style="color:#8fa6bf">un pasillo cada vez</span>; el cuántico los <span style="color:#4cc9e8">inunda todos a la vez</span> — y la <span style="color:#f6a93b">salida verdadera rebosa sola</span></figcaption></figure>
     <p>¿Por qué la salida buena y no una cualquiera? Porque en los <b>callejones</b> el agua rebota contra el muro y se queda en calma, y solo en la <b>salida verdadera</b> se juntan las olas y salen rugiendo.</p>
     <p>Lo asombroso: <span class="pop">el cálculo no lo haces tú, lo hace la naturaleza</span>; tú solo planteas el problema. Y según cuál sea, conviene mover el agua de una forma u otra —<b>buscar a ciegas</b>, <b>descubrir un ritmo oculto</b> o <b>imitar otra molécula</b>—: las distintas recetas (los <b>algoritmos</b>) que verás al final, todas con el mismo motor de fondo, la <b>interferencia</b>.</p>
     <p class="tail">El resto del documento baja al detalle: cómo ocurre de verdad, qué le pasa a cada qubit y cómo se escribe en ocho líneas de código.</p>
@@ -524,7 +567,7 @@ qc.<span class="kw">h</span>(1)   <span class="cm"># Hadamard: superposición en
       <div class="layer L-steel"><span class="lbl">Hardware</span><p>Se aplica una <b>puerta de dos qubits</b> (la CNOT). En superconductores se acoplan dos qubits vecinos vía un “acoplador”; en iones, se usa el <b>movimiento compartido</b> de los átomos en la trampa como bus de conexión.</p></div>
       <div class="layer L-amber"><span class="lbl">Matemática</span>
         <p class="formula">(|00⟩ + |11⟩)/√2&nbsp;&nbsp;≠&nbsp;&nbsp;|a⟩ ⊗ |b⟩</p>
-        <p class="gloss">El par vale <b>00 o 11, nunca 01 ni 10</b>: están atados. El “≠” dice que ese estado <b>no se puede separar</b> en “qubit A por un lado, B por otro”. Eso <i>es</i> el entrelazamiento.</p>
+        <p class="gloss">El par vale <b>00 o 11, nunca 01 ni 10</b>: están atados — es el estado de Bell, el ejemplo mínimo. El “≠” dice que ese estado <b>no se puede separar</b> en “qubit A por un lado, B por otro”. Eso <i>es</i> el entrelazamiento.</p>
       </div>
       <div class="layer L-code"><span class="lbl">Código · Qiskit</span><pre>qc.<span class="kw">cx</span>(0, 1)   <span class="cm"># CNOT: entrelaza q0 con q1</span></pre></div>
     </div>
@@ -749,6 +792,20 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     <div class="qa">
       <p class="q"><span>03</span>¿Cómo se corrigen errores si no puedes ni mirar el estado?</p>
       <p class="a">La trampa es real: como <b>mirar colapsa</b>, no puedes inspeccionar el agua para ver si se ha estropeado. El truco es no mirar el dato, sino un <b>síntoma</b>. Repartes cada qubit “de verdad” (lógico) entre <b>muchos qubits físicos</b>, y luego mides solo si <b>discrepan entre ellos</b> —si dos que deberían ir acompasados se han desincronizado—, sin llegar a leer hacia dónde fue el agua. Esa medida revela <span class="pop">“aquí ha pasado algo”</span> y cómo deshacerlo, sin colapsar la respuesta. ¿El precio? <b>Cientos o miles de qubits físicos por cada qubit lógico</b>. Por eso las máquinas de hoy, con tan pocos, apenas pueden permitírselo —y siguen siendo frágiles—: es la ingeniería que separa el ordenador tosco de hoy del <b>útil de mañana</b>.</p>
+      <figure class="diagram"><svg viewBox="0 0 340 120" role="img" aria-label="Un qubit lógico se reparte en muchos qubits físicos; para corregir errores se mide solo si dos discrepan (el síntoma), sin leer el dato.">
+        <circle cx="66" cy="60" r="42" fill="none" stroke="#a78bfa" stroke-width="2"/>
+        <g class="ec-dot" fill="#4cc9e8"><circle cx="66" cy="60" r="4.5"/><circle cx="66" cy="36" r="4.5"/><circle cx="87" cy="48" r="4.5"/><circle cx="87" cy="72" r="4.5"/><circle cx="66" cy="84" r="4.5"/><circle cx="45" cy="72" r="4.5"/><circle cx="45" cy="48" r="4.5"/></g>
+        <text x="66" y="16" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="#a78bfa">1 LÓGICO = N FÍSICOS</text>
+        <g stroke="#5d7593" stroke-width="2" fill="#5d7593"><line x1="116" y1="60" x2="148" y2="60"/><polygon points="150,60 142,55 142,65"/></g>
+        <circle cx="186" cy="46" r="5" fill="#4cc9e8"/><circle cx="186" cy="74" r="5" fill="#4cc9e8"/>
+        <line class="ec-link" x1="186" y1="51" x2="186" y2="69" stroke="#a78bfa" stroke-width="1.6" stroke-dasharray="3 3"/>
+        <text x="212" y="65" font-family="IBM Plex Mono,monospace" font-size="14" fill="#f6a93b">≠?</text>
+        <text x="199" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#f6a93b">EL SÍNTOMA</text>
+        <g stroke="#8fa6bf" stroke-width="1.6" fill="none"><path d="M250 60 q 14 -13 28 0 q -14 13 -28 0"/></g>
+        <circle cx="264" cy="60" r="4" fill="#8fa6bf"/>
+        <line x1="248" y1="74" x2="280" y2="46" stroke="#e8607d" stroke-width="1.6"/>
+        <text x="264" y="92" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7" fill="#8fa6bf">EL DATO, NO</text>
+      </svg><figcaption>un qubit lógico se reparte en muchos físicos; mides solo si <span style="color:#f6a93b">discrepan</span> — el síntoma, <span style="color:#8fa6bf">nunca el dato</span></figcaption></figure>
     </div>
 
     <div class="qa">
@@ -766,6 +823,25 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
   <section class="algos">
     <h2>¿Qué algoritmos cuánticos hay?</h2>
     <p class="lead">Pocos, en realidad. Casi todos usan el mismo motor —la <b>interferencia</b>— de tres formas distintas. (Por eso lo de la "esquina diminuta".)</p>
+    <figure class="diagram"><svg viewBox="0 0 340 124" role="img" aria-label="Las tres formas de usar la interferencia: buscar a ciegas (Grover), descubrir un ritmo oculto (Shor) e imitar una molécula (Feynman).">
+      <!-- 1 · buscar a ciegas -->
+      <g class="ico-pulse" fill="#4cc9e8"><circle cx="46" cy="40" r="3.5"/><circle cx="64" cy="40" r="3.5"/><circle cx="82" cy="40" r="3.5"/><circle cx="46" cy="58" r="3.5"/><circle cx="82" cy="58" r="3.5"/><circle cx="46" cy="76" r="3.5"/><circle cx="64" cy="76" r="3.5"/><circle cx="82" cy="76" r="3.5"/></g>
+      <circle cx="64" cy="58" r="4.5" fill="#f6a93b"/>
+      <g class="ico-link" stroke="#8fa6bf" fill="none" stroke-width="2"><circle cx="64" cy="58" r="14"/><line x1="74" y1="68" x2="84" y2="78" stroke-linecap="round"/></g>
+      <text x="64" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="#4cc9e8">BUSCAR A CIEGAS</text>
+      <!-- 2 · ritmo oculto -->
+      <path class="ico-wave" d="M128 56 q 10.5 -15 21 0 t 21 0 t 21 0 t 21 0" fill="none" stroke="#f6a93b" stroke-width="2"/>
+      <g stroke="#f6a93b" stroke-width="1" stroke-dasharray="2 2" opacity=".8"><line x1="128" y1="42" x2="128" y2="84"/><line x1="170" y1="42" x2="170" y2="84"/></g>
+      <text x="149" y="80" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="#f6a93b">T</text>
+      <text x="170" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="#f6a93b">RITMO OCULTO</text>
+      <!-- 3 · imitar molécula -->
+      <g stroke="#8fa6bf" stroke-width="1.6"><line x1="242" y1="48" x2="258" y2="48"/><line x1="242" y1="48" x2="250" y2="64"/><line x1="258" y1="48" x2="250" y2="64"/></g>
+      <g class="ico-pulse" fill="#4cc9e8"><circle cx="242" cy="48" r="3.6"/><circle cx="258" cy="48" r="3.6"/><circle cx="250" cy="64" r="3.6"/></g>
+      <text x="276" y="62" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="13" fill="#f6a93b">≈</text>
+      <g stroke="#cf8a2e" stroke-width="1.6"><line x1="294" y1="48" x2="310" y2="48"/><line x1="294" y1="48" x2="302" y2="64"/><line x1="310" y1="48" x2="302" y2="64"/></g>
+      <g class="ico-pulse" fill="#f6a93b"><circle cx="294" cy="48" r="3.6"/><circle cx="310" cy="48" r="3.6"/><circle cx="302" cy="64" r="3.6"/></g>
+      <text x="276" y="108" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="7.5" fill="#f6a93b">IMITAR MOLÉCULA</text>
+    </svg><figcaption>tres formas de mover el agua — un solo motor: la <span style="color:#f6a93b">interferencia</span></figcaption></figure>
 
     <p class="grp">Las tres grandes</p>
     <div class="algo">
@@ -822,7 +898,7 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
   <p class="foot">superposición → marca → interferencia → medida · el resto es ingeniería</p>
 
   <div class="credits">
-    <span class="v">v0.6</span>
+    <span class="v">v0.7</span>
     <span>·</span>
     <span>28 jun 2026</span>
     <span>·</span>
@@ -849,28 +925,29 @@ counts = sim.<span class="kw">run</span>(qc, shots=1024).result().get_counts()
     {re:/\bdecoherencia\b/i,     id:'g-decoherencia'},
     {re:/\bQiskit\b/i,           id:'g-qiskit'},
     {re:/\bcircuitos?\b/i,       id:'g-circuito'},
-    {re:/\bcolaps\w*\b/i,        id:'g-colapso'}
+    {re:/\bcolaps\w*\b/i,        id:'g-colapso'},
+    {re:/\|[01]⟩/,               id:'g-ket'}
   ];
   var EXCL = 'pre,code,.glossary,.formula,h1,h2,h3,a,.gt,.lbl,.chip,.step-num,figcaption,.eyebrow,.eyebrow2,.eyebrow3,.step-sub';
   var root = document.querySelector('.wrap');
   function excluded(node){ var el = node.parentElement; return !el || el.closest(EXCL); }
-  function wrapFirst(t){
-    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
-    while(n = w.nextNode()){
-      if(excluded(n)) continue;
-      var m = t.re.exec(n.nodeValue);
-      if(m){
-        var matchNode = n.splitText(m.index);
-        matchNode.splitText(m[0].length);
+  function wrapAll(t){
+    var nodes = [], w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), n;
+    while(n = w.nextNode()){ if(!excluded(n) && t.re.test(n.nodeValue)) nodes.push(n); }
+    nodes.forEach(function(node){
+      var cur = node, m;
+      while(cur && cur.nodeValue && (m = t.re.exec(cur.nodeValue))){
+        var matchNode = cur.splitText(m.index);
+        var after = matchNode.splitText(m[0].length);
         var s = document.createElement('span');
         s.className = 'gt'; s.setAttribute('data-id', t.id);
         matchNode.parentNode.insertBefore(s, matchNode);
         s.appendChild(matchNode);
-        return;
+        cur = after;
       }
-    }
+    });
   }
-  terms.forEach(wrapFirst);
+  terms.forEach(wrapAll);
 
   var pop = document.createElement('div');
   pop.id = 'gt-pop';
